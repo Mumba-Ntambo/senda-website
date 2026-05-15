@@ -37,7 +37,7 @@ export default function Footer() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(3,1fr)] gap-10">
           <div>
             <div className="flex items-center gap-2">
-              <Logo />
+              <Logo variant="light" className="h-12" />
             </div>
             <p className="mt-4 text-sm text-ink-300 max-w-xs leading-relaxed">
               Modern mobile money for Zambia. Send to a @username, save together,
