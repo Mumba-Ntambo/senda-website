@@ -6,6 +6,7 @@ import HowItWorks from "./sections/HowItWorks";
 import Personas from "./sections/Personas";
 import Business from "./sections/Business";
 import FAQ from "./sections/FAQ";
+import About from "./sections/About";
 import Download from "./sections/Download";
 import Footer from "./sections/Footer";
 
@@ -21,6 +22,7 @@ export default function App() {
         <Personas />
         <Business />
         <FAQ />
+        <About />
         <Download />
       </main>
       <Footer />
