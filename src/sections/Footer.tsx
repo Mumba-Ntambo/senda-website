@@ -34,14 +34,14 @@ export default function Footer() {
   return (
     <footer className="bg-ink-900 text-ink-200">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 py-14">
-        <div className="grid lg:grid-cols-[1.5fr_repeat(3,1fr)] gap-10">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(3,1fr)] gap-10">
           <div>
             <div className="flex items-center gap-2">
               <Logo />
             </div>
             <p className="mt-4 text-sm text-ink-300 max-w-xs leading-relaxed">
               Modern mobile money for Zambia. Send to a @username, save together,
-              run Chilimba and Village Banking — digitally.
+              run Chilimba and Village Banking, digitally.
             </p>
           </div>
 
