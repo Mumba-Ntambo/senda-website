@@ -6,7 +6,7 @@ import { Reveal } from "../components/Reveal";
 const ITEMS = [
   {
     q: "When does Senda launch?",
-    a: "We're targeting Q2 2026 for our public launch in Lusaka, with a closed beta at the University of Zambia in the months leading up to it. Sign up below to be invited.",
+    a: "We're targeting Q2 2026 for our public launch in Lusaka, with a closed beta at the University of Lusaka in the months leading up to it. Sign up below to be invited.",
   },
   {
     q: "Is Senda regulated?",
