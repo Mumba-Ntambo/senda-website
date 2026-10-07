@@ -2,7 +2,7 @@
    and every href, written once so the copy in en.ts can be edited
    without moving a link. */
 
-const contactEmail = "support@sendasend.com";
+const contactEmail = "sendatechnologieszm@gmail.com";
 
 export const brand = {
   name: "Senda Technologies",
