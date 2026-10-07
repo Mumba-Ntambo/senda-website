@@ -1,0 +1,14 @@
+/* Sticky stack: the hero pins at the top of the viewport while About
+   Us scrolls up and covers it, rather than the two scrolling past one
+   another.
+
+   The wrapper is what bounds the effect. A sticky element sticks
+   within its containing block, so without this the hero would stay
+   pinned for the whole document — still painted, still running its
+   canvas — under every section below. The wrapper ends after About
+   Us, which releases the hero exactly when it is no longer needed.
+   Everything from Services down sits outside it and scrolls
+   normally. */
+.stack {
+  position: relative;
+}

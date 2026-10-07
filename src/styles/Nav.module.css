@@ -1,0 +1,318 @@
+/* The two header rows, stacked: utility strip above main bar.
+   The font-family here cascades to every child — the utility link,
+   wordmark and links all inherit it. */
+.nav {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-nav);
+}
+
+/* --- Top strip: contact ---------------------------------------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: var(--topbar-height);
+  overflow: hidden;
+}
+
+/* Folds away over the first few rem of scroll, leaving the main
+   bar. scroll() reads the document scroller. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .topbar {
+      animation: topbar-collapse both linear;
+      animation-timeline: scroll();
+      animation-range: 0 7rem;
+    }
+  }
+}
+
+@keyframes topbar-collapse {
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+.utility {
+  font-size: var(--text-utility);
+  line-height: var(--leading-flat);
+  font-weight: var(--weight-nav);
+  letter-spacing: var(--tracking-wide);
+  /* Instant, matching the bar — see the note in Header.module.css. */
+  color: var(--nav-fg);
+}
+
+.utility:hover {
+  color: var(--nav-fg);
+}
+
+/* --- Main bar: wordmark opposite the actions ------------------ */
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  height: var(--headerbar-height);
+}
+
+.wordmark {
+  display: block;
+  flex-shrink: 0;
+  color: var(--nav-fg);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+/* --- Link row ------------------------------------------------- */
+
+.navList {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The desktop nav link is small and bold — 14px/14px/700 with
+   generous 36px side padding, so the bar reads as a tidy row of
+   labels rather than large words. The padding is what carries the
+   rhythm here, which is why .navList sets no gap. */
+/* --active runs 0 -> 1 -> 0 across its section's view timeline and
+   the colour is mixed from it. At 0 the link is the ordinary
+   foreground, so a browser without scroll timelines shows a normal
+   legible nav rather than a permanently dimmed one. */
+.navLink {
+  display: block;
+  padding: var(--space-5) var(--nav-link-pad-x);
+  font-size: var(--text-nav);
+  line-height: var(--leading-nav);
+  font-weight: var(--weight-nav);
+  /* Plain --nav-fg first, unconditionally. This is the load-bearing
+     line: if the color-mix below is invalid for any reason — the
+     function unsupported, or --active resolving to something that is
+     not a number — then `color` is invalid at computed-value time and
+     falls back to INHERITED, which is white from body. The links then
+     go white on the flipped light bar and vanish, while the wordmark,
+     and the utility link stay dark because they set --nav-fg directly and
+     never touch color-mix.
+
+     With this declaration present, the worst case is simply a nav
+     that does not tint its active link. */
+  color: var(--nav-fg);
+}
+
+@supports (color: color-mix(in srgb, red 50%, blue)) {
+  .navLink {
+    /* --nav-link-override wins whenever the bar is flipped: on a light
+       bar every label is solid ink, and only the one under the cursor
+       is orange. The scroll tint is for the dark bar, where a muted blue
+       reads as "you are here"; on the light bar it just made some
+       labels lighter than others. */
+    color: var(
+      --nav-link-override,
+      color-mix(
+        in srgb,
+        var(--nav-accent) calc(var(--active) * 100%),
+        var(--nav-fg)
+      )
+    );
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .navLink {
+      animation: nav-active both linear;
+      animation-timeline: var(--at);
+    }
+  }
+}
+
+/* Held on through the middle of the section's pass and off at both
+   ends, so only one link is lit at a time. */
+@keyframes nav-active {
+  0% {
+    --active: 0;
+  }
+
+  28%,
+  72% {
+    --active: 1;
+  }
+
+  100% {
+    --active: 0;
+  }
+}
+
+/* Orange on hover. This used to be intentionally inert — it set the
+   colour the link already had, matching a reference that has no
+   per-link hover at all.
+
+   --color-brand-on-light, not --color-brand: .header:hover flips the bar
+   to --nav-active-bg, a near-white, so by the time a link can be
+   hovered it is dark text on a light bar. The dark-surface orange would
+   be 2.0:1 there and fail; this is 5.2:1.
+
+   It beats the scroll-driven --active colour above because it sets
+   `color` outright at higher specificity, rather than feeding the
+   same color-mix. */
+.navLink:hover,
+.navLink:focus-visible {
+  color: var(--color-brand-on-light);
+}
+
+/* For a real route match, once routing exists. On this one-page
+   layout scroll position drives the same colour. */
+.navLink[aria-current="page"] {
+  --active: 1;
+}
+
+/* --- About hover panel ---------------------------------------- */
+
+/* The <li> stays static on purpose. That makes .inner in
+   Header.module.css — the only positioned ancestor — the panel's
+   containing block, so `inset-inline: 0` spans the whole header
+   rather than the width of one label. */
+
+/* Drops out of the bar's bottom edge, full-bleed. It lives inside
+   .header, so pointing at it keeps .header:hover true and the bar
+   stays flipped to white underneath.
+
+   Opaque white, not the bar's --nav-active-bg (white at 90%): the
+   panel hangs below the header's box and so outside its
+   backdrop-filter, where a translucent fill would show the hero
+   through at a different strength than the bar above it. */
+.menu {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  padding: var(--space-6) var(--gutter-page) var(--space-7);
+  background-color: var(--color-bg-light);
+  border-top: 1px solid var(--color-border-on-light);
+  box-shadow: var(--nav-active-shadow);
+  opacity: 0;
+  translate: 0 -0.5rem;
+  /* Hidden, not display:none, so it can transition — and unlike
+     opacity alone this also takes the links out of the tab order and
+     the accessibility tree while the panel is closed. The 200ms delay
+     holds visibility until the fade-out has finished. */
+  visibility: hidden;
+  transition:
+    opacity var(--transition-base),
+    translate var(--transition-base),
+    visibility 0s linear var(--transition-base);
+}
+
+.hasMenu:hover .menu,
+.hasMenu:focus-within .menu {
+  opacity: 1;
+  translate: 0 0;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* The parent label stays lit while the pointer is down in the panel,
+   which .navLink:hover alone cannot do — by then the pointer has left
+   the link. */
+.hasMenu:hover > .navLink,
+.hasMenu:focus-within > .navLink {
+  color: var(--color-brand-on-light);
+}
+
+/* Three across, so the six entries read as two tidy rows. Pushed to
+   the end of the panel rather than centred in it, which lands the
+   columns under the link row that opened them instead of under the
+   wordmark. */
+.menuList {
+  display: grid;
+  /* --menu-cols is set per panel in Nav.tsx from the number of
+     entries; the fallback keeps the grid sane if it ever goes
+     missing. 16rem a column is enough for the longest label to hold
+     one line. */
+  grid-template-columns: repeat(var(--menu-cols, 3), minmax(0, 1fr));
+  gap: var(--space-5) var(--space-4);
+  max-width: calc(var(--menu-cols, 3) * 16rem);
+  margin: 0 0 0 auto;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+/* 500 against the bar's 700. Regular was reading thin at 14px on
+   white next to those labels; medium gives the entries some body
+   while still keeping the panel the quieter level — matching 700
+   would make the two rows compete. */
+.menuLink {
+  display: block;
+  font-size: var(--text-nav-sub);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-medium);
+  /* Not --nav-fg: that token is white until the bar flips, and this
+     panel is always on white. */
+  color: var(--color-fg-on-light);
+  transition: color var(--transition-base);
+}
+
+.menuLink:hover,
+.menuLink:focus-visible {
+  color: var(--color-brand-on-light);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+    translate: none;
+    transition: none;
+  }
+}
+
+/* --- Narrow viewports ---------------------------------------- */
+
+/* An intermediate step in the link padding. At six labels the row
+   is wide enough that the full 36px would push the bar past the
+   viewport on a laptop screen and put a horizontal scrollbar on the
+   page — .wordmark does not shrink, so the overflow has nowhere to
+   go. 36px -> 24px -> 16px keeps the rhythm closing gradually
+   rather than in one jump at 64rem. */
+@media (max-width: 80rem) {
+  .navLink {
+    padding-inline: var(--space-5);
+  }
+}
+
+@media (max-width: 64rem) {
+  .navLink {
+    padding-inline: var(--space-4);
+  }
+}
+
+/* 64rem, not 48rem. The row is six labels deep now, and between those
+   two widths it was overflowing the bar — and below 48rem it vanished
+   with nothing to replace it. MobileNav's toggle appears at exactly
+   this width, so the handover has no gap. */
+@media (max-width: 64rem) {
+  .navList {
+    display: none;
+  }
+
+  .bar {
+    gap: var(--space-3);
+  }
+}
+
+/* Below the width the per-panel count assumes, everything collapses
+   to two columns — still aligned to the end of the bar. */
+@media (max-width: 56rem) {
+  .menuList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 32rem;
+  }
+}

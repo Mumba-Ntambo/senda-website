@@ -1,0 +1,72 @@
+/* Right-edge social rail: a 60px strip of stacked icon links with
+   a 15px rounded outer corner. The reference hangs its rail on the
+   left, so this mirrors it to the right edge and rounds the two
+   corners that face into the page. */
+.rail {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  z-index: 3;
+  transform: translateY(-50%);
+  width: var(--social-rail-width);
+  background-color: var(--color-rail-scrim);
+  -webkit-backdrop-filter: blur(var(--header-blur));
+  backdrop-filter: blur(var(--header-blur));
+  border-start-start-radius: var(--radius-rail);
+  border-end-start-radius: var(--radius-rail);
+  transition:
+    background-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+/* Same flip as the navbar — see .header:hover in Header.module.css
+   for why this is done with tokens rather than descendant rules. */
+.rail:hover {
+  --color-rail-scrim: var(--nav-active-bg);
+  --nav-fg: var(--nav-active-fg);
+
+  box-shadow: var(--nav-active-shadow);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--social-rail-item);
+  color: var(--nav-fg);
+  transition: color var(--transition-base);
+}
+
+/* Orange on hover. A link can only be hovered while the rail itself is,
+   and .rail:hover flips the scrim to near-white — so this colour is
+   always judged against white, never against the dark scrim. That is
+   why it takes the on-light orange rather than --color-brand.
+
+   It also fixes a contrast bug: the previous --nav-accent (#4d9fff)
+   measured 2.72:1 on the flipped rail, under the 3:1 WCAG 1.4.11 asks
+   of a meaningful icon. This is 5.2:1. */
+.link:hover,
+.link:focus-visible {
+  color: var(--color-brand-on-light);
+}
+
+.icon {
+  width: var(--social-icon-size);
+  height: var(--social-icon-size);
+}
+
+/* The rail would sit over the hero copy on narrow screens, where
+   there is no spare gutter to hold it. */
+@media (max-width: 64rem) {
+  .rail {
+    display: none;
+  }
+}

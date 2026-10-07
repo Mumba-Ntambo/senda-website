@@ -1,0 +1,421 @@
+.section {
+  /* Named so the nav link for this section can read it. */
+  view-timeline-name: --contact-s;
+  scroll-margin-block-start: var(--header-height);
+
+  position: relative;
+  background-color: var(--color-bg);
+}
+
+/* Fills the section behind everything else. */
+.canvas {
+  /* Decoration. It covers the whole section, so it must never be a
+     target — .inner is lifted above it and takes the taps, but an
+     absolutely positioned canvas spanning a section has no business
+     being hit-testable either way. */
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Lifted over the canvas. Without this the slab would paint beneath
+   the backdrop, since the canvas comes first in the source and both are
+   in the same stacking context. */
+.inner {
+  position: relative;
+  z-index: 1;
+  padding-block: var(--section-pad-y);
+  padding-inline: var(--gutter-page);
+}
+
+/* One block, two fields. overflow:hidden is what lets the halves run
+   flush into the rounded corners without each needing its own radius. */
+.panels {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+}
+
+/* --- Left: the orange field ---------------------------------------- */
+
+/* Same treatment as the lead card in Why Senda: the surface
+   carries the orange and the ink tokens are remapped here, so
+   SectionHeading follows across the module boundary without knowing
+   about it.
+
+   --color-brand is white rather than a tint because SectionHeading uses
+   it for both the eyebrow and the stressed phrase. Against a title
+   held at 82% white, pure white still reads as the lift. */
+.intro {
+  --color-fg: rgb(255 255 255 / 0.82);
+  --color-fg-muted: rgb(255 255 255 / 0.8);
+  --color-brand: #ffffff;
+  --color-border: rgb(255 255 255 / 0.28);
+
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-7) var(--space-6);
+  color: var(--color-fg);
+  background-color: var(--color-brand-on-light);
+}
+
+.blurb {
+  /* Justified, with hyphenation. The two go together: without
+     hyphens: auto the browser can only stretch the word spaces, and a
+     measure this narrow opens rivers of white down the paragraph.
+     Hyphenation needs a language to know where words may break, which
+     <html lang> now supplies — en-MY or ms-MY. */
+  text-align: justify;
+  hyphens: auto;
+
+  max-width: var(--measure-body);
+  margin: var(--space-5) 0 0;
+  font-size: var(--text-lead);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-lead);
+}
+
+/* --- What to tell us ------------------------------------------- */
+
+/* margin-top:auto pins it to the foot of the orange field, so the rule
+   above it lands level with the bottom of the form opposite rather
+   than floating in the middle of the slab. */
+.ask {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: var(--space-7) 0 0;
+  padding-block-start: var(--space-6);
+  border-block-start: 1px solid var(--color-border);
+}
+
+@media (min-width: 64.0625rem) {
+  .ask {
+    margin-block-start: auto;
+  }
+}
+
+/* Term and detail on one line, the terms sharing a column so their
+   left edges line up and the eye can run down them. */
+.askItem {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.askTerm {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-subheading);
+}
+
+.askDetail {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-fg-muted);
+}
+
+/* --- Form panel ------------------------------------------------ */
+
+/* Right half of the slab: white, with the ink tokens remapped the
+   same way the orange field remaps its own. Everything inside — labels,
+   fields, errors, the button, the status line — follows from these
+   six lines rather than from per-element overrides. */
+.form {
+  --color-fg: var(--color-fg-on-light);
+  --color-fg-muted: var(--color-fg-muted-on-light);
+  --color-border: var(--color-border-on-light);
+  --color-accent: var(--color-accent-on-light);
+  --color-brand: var(--color-brand-on-light);
+  --color-danger: var(--color-danger-on-light);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-7) var(--space-6);
+  color: var(--color-fg);
+  background-color: var(--color-bg-light);
+}
+
+.formTitle {
+  margin: 0;
+  font-size: var(--text-lg);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-subheading);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.groupSplit {
+  padding-block-start: var(--space-5);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* --- Service chips --------------------------------------------- */
+
+/* A fieldset carries a browser default border and padding that would
+   put a second box inside the panel. */
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block-start: var(--space-3);
+}
+
+/* The checkbox itself stays in the page rather than being display:
+   none — it has to remain focusable and announced. It sits under the
+   chip at zero opacity, so the ring below is what shows focus. */
+.chipInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-label);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-body);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    color var(--transition-base),
+    background-color var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.chip:hover {
+  border-color: color-mix(in srgb, var(--color-fg) 32%, transparent);
+}
+
+/* Ticked reads as the filled button it resembles — same orange, same
+   white ink as every other filled control on the site. */
+.chip:has(.chipInput:checked) {
+  color: #ffffff;
+  background-color: var(--color-brand-fill);
+  border-color: var(--color-brand-fill);
+}
+
+/* Focus lands on the hidden input, so the ring has to be drawn by the
+   chip wrapping it. */
+.chip:has(.chipInput:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* The label sits above the zero-opacity input rather than beside it,
+   so the chip's own padding is what gives it size. */
+.chipLabel {
+  position: relative;
+}
+
+.label {
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.optional {
+  font-weight: var(--weight-body);
+  text-transform: none;
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-fg-muted);
+}
+
+.input,
+.textarea {
+  padding: var(--space-3) var(--space-4);
+  /* Inputs do not inherit the page face on their own. */
+  font-family: inherit;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-fg);
+  /* A shade off the white panel, so the field reads as a well without
+     needing a heavier border to find its edge. */
+  background-color: var(--color-surface-on-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition:
+    border-color var(--transition-base),
+    background-color var(--transition-base);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 9rem;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-fg-muted);
+}
+
+.input:hover,
+.textarea:hover {
+  /* --color-border-strong is a near-white for dark surfaces and would
+     vanish here; darkening the on-light border is the light-panel
+     equivalent. */
+  border-color: color-mix(in srgb, var(--color-fg) 32%, transparent);
+}
+
+/* A ring, not just a border tint. The old rule only swapped
+   border-color, which on a 1px edge is close to invisible and left
+   keyboard users without a reliable indicator. */
+.input:focus-visible,
+.textarea:focus-visible {
+  border-color: var(--color-accent);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.input[aria-invalid="true"],
+.textarea[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-label);
+  font-weight: var(--weight-body);
+  line-height: var(--leading-body);
+  color: var(--color-danger);
+}
+
+/* --- Actions --------------------------------------------------- */
+
+/* Button and status share a line: the reply belongs next to the
+   control that produced it, and the row keeps its height whether or
+   not there is a message, so nothing shifts on submit. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--btn-h, 2.875rem);
+}
+
+.submit {
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  font-family: inherit;
+  font-size: var(--btn-font-size);
+  line-height: var(--btn-line-height);
+  font-weight: var(--btn-font-weight);
+  /* White on --color-brand-on-light is 5.2:1. The dark ink this used to
+     carry belonged to the bright dark-surface orange; on the deep orange the
+     panel now uses, it would be the one that fails. */
+  color: #ffffff;
+  background-color: var(--color-brand-fill);
+  /* Matched to the fill rather than 0, so this sits at the same
+     height as the other primary buttons. */
+  border: var(--btn-border-width) solid var(--color-brand-fill);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    opacity var(--transition-base);
+}
+
+.submit:hover:not(:disabled) {
+  background-color: var(--color-brand-fill-hover);
+  border-color: var(--color-brand-fill-edge);
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.status {
+  flex: 1 1 14rem;
+  margin: 0;
+  font-size: var(--text-label);
+  font-weight: var(--weight-body);
+  line-height: var(--leading-body);
+  color: var(--color-fg-muted);
+}
+
+/* The form is not wired to a provider yet, so a submit reports that
+   rather than a success. Colouring it as a warning stops it reading
+   like a receipt. */
+.status[data-status="unconfigured"] {
+  color: var(--color-danger);
+}
+
+.status[data-status="sent"] {
+  color: var(--color-fg);
+}
+
+/* --- Narrow viewports: the halves stack, still flush ------------ */
+
+/* --- Narrow viewports ------------------------------------------ */
+
+@media (max-width: 64rem) {
+  .panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .intro {
+    padding: var(--space-6);
+  }
+
+  .form {
+    padding: var(--space-6);
+  }
+}
+
+@media (max-width: 40rem) {
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form {
+    padding: var(--space-5);
+  }
+
+  .askItem {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+
+  .submit {
+    width: 100%;
+  }
+}

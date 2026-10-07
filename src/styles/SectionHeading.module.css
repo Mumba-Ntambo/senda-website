@@ -1,0 +1,76 @@
+/* Shared eyebrow + title block. 40px / 48px / 500 capped to the
+   700px measure, with one phrase lifted to 600 — the reference's
+   section-title treatment, dropping to 30px/35px on narrow screens. */
+.heading {
+  align-self: start;
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  /* The signal orange, not the blue accent. The blue was the last piece
+     of the old palette left in a heading block whose stressed phrase
+     is now orange — two accent colours in one heading read as an
+     accident rather than a hierarchy.
+
+     Each section remaps --color-brand to its own surface pair, so this
+     is 5.15:1 on the Services tint and 9.4:1 on the dark sections. */
+  color: var(--color-brand);
+}
+
+.title {
+  max-width: var(--measure);
+  margin: 0;
+  font-size: var(--text-5xl);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+}
+
+/* Weight AND colour. The span already stepped up to 900; the signal
+   orange is what makes it read as the stressed phrase rather than merely
+   heavier. Sections on a light surface remap --color-brand to its
+   on-light pair, the same way they remap --color-accent. */
+.emphasis {
+  font-weight: var(--weight-emphasis);
+  color: var(--color-brand);
+}
+
+.subtitle {
+  max-width: var(--measure-body);
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-lead);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-lead);
+  color: var(--color-fg-muted);
+}
+
+/* Start-aligned subtitles justify; the centred variant below does not.
+   Justification and centring are two different ways of resolving the
+   same slack, and asking for both leaves the last line adrift from a
+   block whose other lines are flush. */
+.heading:not(.center) .subtitle {
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Centred variant: the title's measure has to centre with it. */
+.center {
+  text-align: center;
+}
+
+.center .title,
+.center .subtitle {
+  margin-inline: auto;
+}
+
+@media (max-width: 48rem) {
+  .title {
+    font-size: var(--text-stat);
+    line-height: var(--leading-snug);
+  }
+}

@@ -1,0 +1,386 @@
+/* ---------------------------------------------------------------
+   Design tokens — the single source of truth for color, type,
+   spacing, shape and motion. Nothing else should hardcode a value.
+   --------------------------------------------------------------- */
+
+:root {
+  /* --- Surface ------------------------------------------------ */
+  --color-bg: #0b0e14;
+  --color-bg-header: #0c0f17;
+  /* Navbar scrim. The header overlays the hero, so this alpha is
+     what you see the backdrop through — raise it for legibility,
+     lower it to show more of it. 0 is fully transparent. */
+  --color-header-scrim: rgb(12 15 23 / 0.3);
+  /* Heavier than the header's: the rail scrolls across both dark
+     and white sections, so it has to read as a solid dark pill
+     everywhere rather than tint whatever is behind it. */
+  --color-rail-scrim: rgb(12 15 23 / 0.72);
+  /* Opaque fill the header fades in behind itself once scrolled, so
+     white labels stay legible over the light sections below. */
+  --color-header-solid: #0c0f17;
+  --header-blur: 2px;
+
+  /* --- Navbar colour roles -------------------------------------
+     The whole bar flips on hover: background to white at 90% with
+     a soft shadow, every label to near-black. The reference drives
+     this with a JS class; we use :hover in Header.module.css,
+     which redefines this set so the flip cascades into
+     Nav.module.css across the module boundary. */
+  --nav-fg: var(--color-fg);
+  --nav-fg-inverse: var(--color-bg-header);
+  --nav-border: var(--color-border-strong);
+  --nav-accent: var(--color-accent);
+
+  /* ...and the hovered values */
+  --nav-active-bg: rgb(255 255 255 / 0.9);
+  --nav-active-fg: #0b0e14;
+  --nav-active-border: rgb(0 0 0 / 0.3);
+  --nav-active-shadow: 0 3px 6px rgb(0 0 0 / 0.16);
+
+  /* --- Social rail --------------------------------------------
+     60px wide, ~44px per icon slot, 15px radius on the corners
+     that face the page. */
+  /* --- Hero CTA ------------------------------------------------
+     A 32px circled-arrow icon, .625rem gap, 18px/22px label,
+     1.25rem below the copy above it. */
+  --cta-icon-size: 2rem; /* 32px */
+  --cta-gap: 0.625rem; /* 10px */
+  --cta-offset: 1.25rem; /* 20px */
+
+  --social-rail-width: 3.75rem; /* 60px */
+  --social-rail-item: 2.75rem; /* 44px */
+  --social-icon-size: 1.375rem; /* 22px */
+  --social-icon-sm: 1.5625rem; /* 25px — footer row */
+  --radius-rail: 0.9375rem; /* 15px */
+  --color-hero-bg: #070b14;
+  --color-hero-bg-deep: #0d1526;
+
+  /* --- Ink ---------------------------------------------------- */
+  --color-fg: #ffffff;
+  /* Lifted from #9aa7bd: the dark-surface counterpart of darkening
+     the muted ink on light, so body copy gains the same legibility on
+     both. 8.93:1 on --color-bg. */
+  --color-fg-muted: #b4bfd2;
+
+  /* --- Accent blue ------------------------------------------ */
+  --color-accent: #4d9fff;
+  --color-accent-bright: #a8cfff;
+  --color-accent-dim: #1d3f70;
+  --color-accent-faint: #12294a;
+
+  /* --- Brand orange --------------------------------------------
+     The second brand colour. It needs a
+     pair, like the accent does: no single orange clears AA on both the
+     dark field and white. These are 9.4:1 on --color-bg and 5.2:1 on
+     white respectively.
+
+     Two jobs: editorial emphasis in display type, and the primary
+     action. Filled buttons are orange; hairline/secondary controls
+     stay neutral and links and focus rings stay blue.
+
+     Text on an orange button is NOT interchangeable between surfaces:
+     white on --color-brand-on-light is 5.2:1, but white on
+     --color-brand is only 2.0:1 and fails. */
+  --color-brand: #ff9f43;
+  --color-brand-bright: #ffd2a6;
+  --color-brand-dim: #7a3d0c;
+  --color-brand-on-light: #c2410c;
+
+  /* The lead card in the Why section: the deep end of the accent
+     blue, so it does not compete with the orange call to action
+     directly beneath it. White text on it is about 10:1. */
+  --color-lead-card: #1d3f70;
+
+  /* --- Filled orange buttons --------------------------------------
+     One orange for every filled button on the site, on every surface,
+     and it is the deep one — because what pins it is the white label
+     it carries. White on --color-brand-on-light is 5.2:1; white on
+     --color-brand is 2.0:1 and fails. A filled button cannot follow
+     the surface the way an accent can.
+
+     --color-brand stays the ACCENT orange — eyebrows, stressed phrases,
+     rules, the carousel's progress thumb — and is free to differ
+     between a light section and a dark one, because none of those
+     carry text on top of the colour.
+
+     Hover darkens on every surface. Lightening on dark sections and
+     darkening on light ones was the rule before, and it made the same
+     button read as two different components. */
+  --color-brand-fill: var(--color-brand-on-light);
+  --color-brand-fill-hover: color-mix(in srgb, var(--color-brand-on-light) 88%, #000);
+  --color-brand-fill-active: color-mix(in srgb, var(--color-brand-on-light) 80%, #000);
+  --color-brand-fill-edge: color-mix(in srgb, var(--color-brand-on-light) 82%, #000);
+
+  /* Alternating section surface, and the panel colour that cards
+     and form fields sit on. */
+  --color-bg-alt: #0e1420;
+
+  /* Light section surface. A section opting into this redefines the
+     ink tokens on itself, so descendants in other modules
+     (SectionHeading, cards) follow without knowing about it —
+     the same technique as the navbar hover flip. */
+  --color-bg-light: #ffffff;
+  --color-fg-on-light: #0b0e14;
+  /* Darkened from #566076 (9.4:1). Secondary copy was reading too
+     pale beside the near-black headings. 8.79:1 on white. */
+  --color-fg-muted-on-light: #3f4859;
+  --color-surface-on-light: #f3f5f9;
+  --color-border-on-light: rgb(11 14 20 / 0.12);
+
+  /* One accent for light sections. The four-colour set that was
+     here read as a template: rainbow feature cards are decoration
+     standing in for hierarchy. */
+  --color-accent-on-light: #1657b5;
+
+  /* Story-column accents. Kept as a deliberate set rather than a
+     palette grab: a monotonic hue ramp (teal 188 -> blue 215 ->
+     indigo 251) at near-identical contrast on white — 5.85, 6.85 and
+     6.68 to 1, all clearing AA for body text — so no block reads as
+     louder than its neighbours. The middle step IS the brand accent,
+     which is what ties the ramp to the rest of the page.
+
+     This is a partial walk-back of the note above: colour here labels
+     three parallel blocks, it does not stand in for hierarchy. Keep it
+     to sets like this and it will not read as rainbow feature cards. */
+  --color-story-1: #0e6f7d;
+  --color-story-2: #1657b5;
+  --color-story-3: #5a46c8;
+  /* Neutral media slot. Plain grey on purpose — it reads as "image
+     goes here" rather than as invented artwork. */
+  --color-media-on-light: #e4e8ee;
+
+  --color-surface: #141b29;
+  --color-danger: #ff8f8f;
+  /* The dark-surface danger is a pale pink that all but disappears on
+     white. Form errors on a light panel take this instead: 6.48:1 on
+     white, and far enough from --color-brand-on-light (the primary
+     button) that an error is not mistaken for an action. */
+  --color-danger-on-light: #b3261e;
+
+  /* --- Lines -------------------------------------------------- */
+  --color-border: rgb(255 255 255 / 0.22);
+  --color-border-strong: rgb(255 255 255 / 0.85);
+
+  /* --- Typeface -----------------------------------------------
+     Nunito: rounded terminals, variable 200-1000. One face for the
+     whole page, headings and body alike. One face throughout;
+     hierarchy comes from weight and scale, not from mixing
+     families. */
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* The navbar no longer diverges from the body face; kept as a
+     seam in case it ever should again. */
+  --font-nav: var(--font-sans);
+
+  /* --- Type scale ---------------------------------------------
+     Not a synthetic ratio. These steps were measured off the
+     reference layout: a framework h1-h6 layer (16/20/24/28/32/40)
+     plus the component sizes that sit between and above it.
+     Adjacent steps run ~1.1-1.3 - deliberately irregular.
+     Root is 16px on both sides. */
+  --text-2xs: 0.625rem; /* 10px - micro numeric sub-labels */
+  --text-xs: 0.75rem; /* 12px - utility strip, nav micro-labels */
+  --text-caption: 0.8125rem; /* 13px - captions, tab labels, infobars */
+  --text-sm: 0.875rem; /* 14px - nav links, small (most-used size) */
+  --text-base: 1rem; /* 16px - body, h6 */
+  --text-md: 1.125rem; /* 18px - card/teaser copy, search input */
+  --text-lg: 1.25rem; /* 20px - h5, lead/intro paragraphs */
+  --text-xl: 1.375rem; /* 22px - filter labels, accordion buttons */
+  --text-2xl: 1.5rem; /* 24px - h4, large nav items */
+  --text-3xl: 1.75rem; /* 28px - h3 */
+  --text-4xl: 2rem; /* 32px - h2 */
+  --text-5xl: 2.5rem; /* 40px - h1, section titles */
+  --text-stat: 1.875rem; /* 30px - stat/number callouts */
+  --text-display: 3.125rem; /* 50px - hero/large section titles */
+  --text-display-xl: 5.125rem; /* 82px - giant display numerals */
+
+  /* Fluid cuts. The reference ships h1 and h4 as responsive
+     values that reach their cap at the 1200px breakpoint; these
+     clamps are the same curves without the media query. */
+  --text-h1-fluid: min(calc(1.375rem + 1.5vw), var(--text-5xl));
+  --text-h4-fluid: min(calc(1.275rem + 0.3vw), var(--text-2xl));
+
+  /* --- Type roles ----------------------------------------------
+     Text picks a ROLE, not a size and weight separately. Three
+     roles cover everything that is not a heading:
+
+       lead   18/300  section-level intro copy
+       body   16/400  copy inside a component
+       label  14/700  uppercase eyebrows and form labels
+
+     Headings are 500 throughout; 600 is the emphasis span inside a
+     section title. Anything reaching past these is a new role and
+     should be named here rather than set inline. */
+  --text-lead: var(--text-md);
+  /* Was --weight-light (300), which read thin at lead size on white.
+     Regular holds the same airy feel with more ink on the page. */
+  --weight-lead: var(--weight-regular);
+  --text-body: var(--text-base);
+  /* A half-step above regular. Nunito is a variable face across
+     200-1000, so 450 is a real weight here, not a synthesised one. */
+  --weight-body: 450;
+  --text-label: var(--text-sm);
+  --weight-label: var(--weight-bold);
+  --weight-heading: var(--weight-medium);
+  /* Display headings and the emphasis span inside them. 800/900
+     rather than 900/900 so the <span> can still step up: at the top
+     of the axis there is nowhere heavier to go, and the distinction
+     the section titles are built on would be lost. */
+  --weight-display: var(--weight-extrabold);
+  --weight-emphasis: var(--weight-black);
+  /* Card, step and story-column titles. Bold, not black — the heavy
+     register belongs to display sizes; at 18-20px it turns clumsy. */
+  --weight-subheading: var(--weight-bold);
+
+  --measure-body: 34rem; /* ~70ch at body size */
+
+  /* --- Navigation type ----------------------------------------
+     Measured off the reference's live stylesheet, not a static
+     scrape. Its 24px/weight-900 nav values are scoped to
+     max-width:1024px and belong to the MOBILE MENU OVERLAY, not
+     the desktop bar. The desktop rules carry no media query:
+       utility strip   12px / 12px / 700
+       main nav link   14px / 14px / 700
+     Both rows are small, bold and flush-leaded; the size contrast
+     between them is slight. Desktop marks the active item with
+     colour, NOT weight — the weight-900 jump is overlay behaviour
+     only. */
+  --text-utility: var(--text-xs); /* 12px - utility strip */
+  --text-nav: var(--text-sm); /* 14px - desktop nav items, drives
+     the links. Matches the reference. */
+  --text-nav-overlay: var(--text-2xl); /* 24px - <=1024px overlay */
+  --text-nav-sub: var(--text-sm); /* 14px - dropdown items */
+  --weight-nav: var(--weight-bold); /* 700 - drives the whole bar,
+     and the reference's value for both header rows. Any integer
+     200-1000 works; Nunito is variable. */
+  --text-wordmark: var(--text-xl); /* 22px - our lockup. The
+     reference uses an SVG mark here, so there is nothing to match;
+     this is simply the nearest step on the scale. */
+
+  /* --- Weight --------------------------------------------------
+     The reference leans on 300 (its most-declared weight) and 500
+     (headings). 700/900 are for emphasis and stat callouts only. */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+  --weight-black: 900;
+  --weight-ultra: 1000; /* axis max on Nunito; heavier than
+     anything in the reference */
+
+  /* --- Leading ------------------------------------------------
+     Body copy is 20px on 16px — 1.25, overriding the framework
+     default of 1.5. That tight setting is what makes the layout
+     read dense rather than airy. Headings sit at 1.2; only the
+     50px display cut tightens further (55px on 50px = 1.1). */
+  --leading-flat: 1;
+  --leading-tight: 1.1;
+  --leading-nav: 1; /* 14px on 14px - flush, like the 12px row */
+  --leading-nav-overlay: 1.21; /* 29px on 24px, overlay only */
+  --leading-heading: 1.2;
+  --leading-snug: 1.17; /* 35px on 30px — narrow section titles */
+  --leading-body: 1.25;
+  --leading-prose: 1.5; /* framework default, for buttons/forms */
+
+  /* --- Tracking ------------------------------------------------
+     The reference sets no letter-spacing override anywhere in its
+     type system — headings and body both run at 0. The tight/wide
+     values below are for our own uppercase lockups only. */
+  --tracking-tight: -0.02em;
+  /* Paired with --weight-display; heavy type needs the air taken out. */
+  --tracking-display: var(--tracking-tight);
+  --tracking-normal: 0;
+  --tracking-wide: 0.06em;
+  --tracking-wider: 0.12em;
+
+  /* --- Space -------------------------------------------------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* --- Layout ------------------------------------------------- */
+  --measure: 43.75rem; /* 700px — the reference caps both its hero
+     headline and its section titles at this width */
+  --section-pad-y: clamp(4rem, 9vh, 7rem);
+  /* Bootstrap .btn metrics, kept at their own values so the button
+     reads as the familiar control rather than as our spacing scale
+     wearing a fill. */
+  /* Primary buttons — the filled ones that carry an action. Every
+     value here is shared by the Services card CTA, the About Us
+     "Learn more" and the contact submit, which were previously 16px,
+     12px-uppercase and 16px at three different heights.
+
+     10px of block padding against a 24px line box gives a 44px
+     control, which is also the WCAG minimum touch target — so the
+     sizing is doing two jobs. */
+  --btn-font-size: var(--text-body);
+  --btn-font-weight: var(--weight-label);
+  --btn-line-height: 1.5;
+  --btn-pad-y: 0.625rem; /* 10px */
+  --btn-pad-x: 1.5rem; /* 24px */
+  /* Part of the height, so it belongs in the shared set: a button
+     with no border sits 2px shorter than one beside it with the same
+     padding. Buttons that want no visible edge use this width in
+     their own fill colour. */
+  --btn-border-width: 1px;
+
+  --card-banner: 16rem; /* 256px — photo band behind the header */
+  --card-avatar: 2.5rem; /* 40px */
+  --card-avatar-icon: 1.25rem; /* 20px */
+  --hero-copy-bottom: clamp(8.125rem, 22svh, 22rem); /* Lifted off
+     the floor toward centre. Floor is 130px — the reference's own
+     homepage value — so short viewports never drop below it;
+     taller ones scale with the viewport instead of stranding the
+     copy at the bottom. Raise the 22svh to keep going; true centre
+     is align-items:center on .hero. */
+  --text-shadow-hero: 1px 2px 3px rgb(0 0 0 / 0.35);
+  --gutter-page: clamp(1.25rem, 3.5vw, 3.5rem);
+  --nav-link-pad-x: 2.25rem; /* 36px — reference nav link padding */
+  --topbar-height: 2.75rem;
+  --headerbar-height: 4.5rem;
+  --header-height: calc(var(--topbar-height) + var(--headerbar-height));
+
+  /* --- Shape -------------------------------------------------- */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-btn: 0.375rem; /* 6px — Bootstrap's .btn radius */
+  --radius-lg: 1.125rem; /* 18px */
+  --radius-xl: 1.5rem; /* 24px — bento cards */
+  --radius-pill: 999px;
+
+  /* Card elevation. Tuned for the light section, so these are dark
+     shadows on a pale surface rather than the usual dark-theme glow. */
+  --shadow-card: 0 1px 2px rgb(11 14 20 / 0.05);
+  /* drop-shadow() takes one shadow and no spread, so the card shadows
+     have filter-shaped equivalents. Used where a mask means a
+     box-shadow would be clipped at the cut. */
+  --shadow-card-drop: 0 1px 2px rgb(11 14 20 / 0.08);
+  --shadow-card-drop-hover: 0 12px 24px rgb(11 14 20 / 0.16);
+  --shadow-card-hover: 0 14px 30px rgb(11 14 20 / 0.12);
+
+  /* --- Motion ------------------------------------------------- */
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* Shapes scroll-driven entrances. A timing function still applies
+     on a scroll timeline — it remaps scroll progress to animation
+     progress — so an element covers most of its distance early in
+     its range and settles through the rest, instead of tracking the
+     wheel one-to-one. easeOutCubic: decisive without finishing so
+     early that the element looks detached from the scroll. */
+  --ease-reveal: cubic-bezier(0.33, 1, 0.68, 1);
+  /* Shared by the reveal in globals.css and by any element that has
+     its own `transition` and must therefore restate the reveal's
+     properties — `transition` is a shorthand, so a component
+     declaring one at equal specificity silently drops opacity and
+     translate and the element snaps into place instead of arriving. */
+  --reveal-duration: 700ms;
+}

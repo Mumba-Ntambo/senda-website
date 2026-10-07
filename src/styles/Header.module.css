@@ -1,0 +1,130 @@
+/* Fixed rather than in flow: it overlays the hero so the backdrop shows
+   through the scrim, and stays put once you scroll past it. .hero
+   runs the full viewport height beneath it either way. */
+.header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 4;
+  background-color: var(--color-header-scrim);
+  -webkit-backdrop-filter: blur(var(--header-blur));
+  backdrop-filter: blur(var(--header-blur));
+  /* No transition on background-color, deliberately. The bar and its
+     labels invert together, and crossfading both at once makes them
+     converge on the same mid-grey around a third of the way through —
+     the labels wash out to roughly 1.9:1 for about 100ms.
+
+     No ordering avoids it: moving the text first gives dark-on-dark,
+     moving the bar first gives white-on-light. Flipping in a single
+     frame means there is no intermediate state to be unreadable in.
+     The shadow still eases, since it cannot hurt legibility. */
+  transition: box-shadow var(--transition-base);
+}
+
+/* Hovering anywhere on the bar flips it white and turns every
+   label dark. Redefining the tokens here is what carries the
+   change into Nav.module.css, since the two files' class names
+   don't match.
+
+   The open mobile menu takes the same flip. Its panel is white and
+   sits beneath this bar, so without it a near-black header would be
+   left floating on a white sheet. MobileNav sets the attribute on
+   <html> while the panel is open. */
+.header:hover,
+:global(html[data-menu-open]) .header {
+  --color-header-scrim: var(--nav-active-bg);
+  --nav-fg: var(--nav-active-fg);
+  /* Forces every nav link to solid ink while the bar is light, instead
+     of the scroll-driven tint. Read by .navLink in Nav.module.css —
+     the two files' class names do not match, so a token is the only
+     way across. */
+  --nav-link-override: var(--nav-active-fg);
+  --nav-fg-inverse: var(--color-fg);
+  --nav-border: var(--nav-active-border);
+  --nav-accent: var(--color-accent-dim);
+
+  box-shadow: var(--nav-active-shadow);
+}
+
+/* Fills in behind the bar as you leave the hero. It has to be a
+   separate layer rather than an animated background-color on
+   .header: an animation outranks a normal declaration, so it would
+   win against the hover flip and kill it. Here the animation only
+   touches opacity while :hover still owns the colour. */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-header-solid);
+  opacity: 0;
+  /* No transition here either, and this is the one that actually
+     matters once you have scrolled: the solidify animation drives
+     this layer to opacity 1, so it — not .header's own background —
+     is the surface the labels sit on. Leaving it easing while the
+     labels flip instantly gave 200ms of dark text on a still-dark
+     bar. Both ends of the inversion have to change in the same
+     frame, and that means every layer involved. */
+}
+
+.header:hover::before,
+:global(html[data-menu-open]) .header::before {
+  --color-header-solid: var(--nav-active-bg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .header::before {
+      animation: header-solidify both linear;
+      animation-timeline: scroll();
+      animation-range: 0 7rem;
+    }
+  }
+}
+
+@keyframes header-solidify {
+  to {
+    opacity: 1;
+  }
+}
+
+.inner {
+  position: relative;
+  padding-inline: var(--gutter-page);
+}
+
+/* --- Reading progress ------------------------------------------- */
+
+/* Scaled from the inline start so it grows left to right. scale is
+   composited, unlike animating width. */
+.progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  transform-origin: 0 50%;
+  scale: 0 1;
+  /* The signal orange, running dim to bright across the width so the
+     leading edge reads as the live end. The orange set has the same
+     three steps the accent did, so the ramp is unchanged in shape. */
+  background-image: linear-gradient(
+    to right,
+    var(--color-brand-dim),
+    var(--color-brand),
+    var(--color-brand-bright)
+  );
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .progress {
+      animation: progress-grow both linear;
+      animation-timeline: scroll();
+    }
+  }
+}
+
+@keyframes progress-grow {
+  to {
+    scale: 1 1;
+  }
+}

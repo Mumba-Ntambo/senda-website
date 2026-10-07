@@ -1,0 +1,302 @@
+/* --- Page band ---------------------------------------------------- */
+
+/* The home hero's field at reduced height: same surface, same backdrop,
+   but it does not pin and it does not fill the screen — this page's
+   subject is the product beneath it. */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(24rem, 58svh, 34rem);
+  overflow: hidden;
+  background-color: var(--color-hero-bg);
+  background-image: radial-gradient(
+    120% 90% at 50% 100%,
+    var(--color-hero-bg-deep) 0%,
+    var(--color-hero-bg) 70%
+  );
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgb(7 11 20 / 0.55) 0%,
+      rgb(7 11 20 / 0.25) 14%,
+      rgb(7 11 20 / 0) 38%
+    ),
+    linear-gradient(
+      to top,
+      rgb(7 11 20 / 0.6) 0%,
+      rgb(7 11 20 / 0.25) 18%,
+      rgb(7 11 20 / 0) 42%
+    );
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-inline: var(--gutter-page);
+  padding-block-start: calc(var(--header-height) + var(--space-6));
+  padding-block-end: var(--space-8);
+  text-shadow: var(--text-shadow-hero);
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.headline {
+  max-width: var(--measure);
+  margin: 0;
+  font-size: var(--text-display);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  color: var(--color-fg);
+}
+
+.headlineEmphasis {
+  color: var(--color-brand);
+}
+
+.subhead {
+  max-width: var(--measure);
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-lead);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-lead);
+  color: var(--color-fg);
+}
+
+/* --- Product ------------------------------------------------------ */
+
+.product {
+  position: relative;
+  scroll-margin-block-start: var(--header-height);
+
+  /* Light section: the ink tokens are redefined here so everything
+     inside follows, the same way Why Senda does it. */
+  --color-fg: var(--color-fg-on-light);
+  --color-fg-muted: var(--color-fg-muted-on-light);
+  --color-border: var(--color-border-on-light);
+  --color-accent: var(--color-accent-on-light);
+  --color-brand: var(--color-brand-on-light);
+
+  color: var(--color-fg);
+  background-color: var(--color-bg-light);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--space-7);
+  max-width: 82rem;
+  margin-inline: auto;
+  padding-block: var(--section-pad-y);
+  padding-inline: var(--gutter-page);
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.category {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.name {
+  margin: 0;
+  font-size: var(--text-display);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.tagline {
+  max-width: var(--measure);
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-heading);
+}
+
+.summary {
+  max-width: var(--measure);
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-lead);
+  line-height: var(--leading-prose);
+  font-weight: var(--weight-body);
+  color: var(--color-fg-muted);
+}
+
+/* The filled button, on the shared metrics from tokens.css. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  margin-block-start: var(--space-5);
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  line-height: var(--leading-flat);
+  color: #ffffff;
+  border: var(--btn-border-width) solid var(--color-brand-fill);
+  border-radius: var(--radius-btn);
+  background-color: var(--color-brand-fill);
+  transition: background-color var(--transition-base);
+}
+
+.cta:hover,
+.cta:focus-visible {
+  color: #ffffff;
+  background-color: var(--color-brand-fill-hover);
+}
+
+/* The deep blue of the Why Senda lead card, so the two pages share
+   the one panel colour that is not the brand orange. */
+.highlights {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: var(--space-6);
+  list-style: none;
+  color: #ffffff;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-lead-card);
+  box-shadow: 0 1.25rem 2.5rem rgb(11 14 20 / 0.16);
+}
+
+.highlight {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-medium);
+}
+
+.tick {
+  flex-shrink: 0;
+  width: 1.375rem;
+  height: 1.375rem;
+  color: var(--color-accent-bright);
+}
+
+/* --- Parts -------------------------------------------------------- */
+
+.partsTitle {
+  margin: 0;
+  padding-block-start: var(--space-6);
+  font-size: var(--text-3xl);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-subheading);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.parts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.part {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-surface-on-light);
+}
+
+.partIcon {
+  display: flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-block-end: var(--space-2);
+  color: var(--color-accent);
+}
+
+.partIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.partAudience {
+  margin: 0;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-fg-muted);
+}
+
+.partTitle {
+  margin: 0;
+  font-size: var(--text-lg);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-subheading);
+}
+
+.partBody {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: var(--leading-prose);
+  font-weight: var(--weight-body);
+  color: var(--color-fg-muted);
+}
+
+/* --- Narrow viewports --------------------------------------------- */
+
+@media (max-width: 64rem) {
+  .intro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  .parts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 40rem) {
+  .headline,
+  .name {
+    font-size: var(--text-5xl);
+  }
+
+  .parts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

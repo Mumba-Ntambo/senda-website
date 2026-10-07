@@ -1,0 +1,320 @@
+/* Light section. Redefining the ink tokens here is what carries the
+   flip to the headings and body copy inside. */
+.section {
+  /* Named so the nav link for this section can read it — the href
+     doubles as the key, so "#about-us" reads --about-us-s. */
+  view-timeline-name: --about-us-s;
+  /* Rides up over the pinned hero, but does not pin in turn — what
+     follows it scrolls away normally rather than covering it. Still
+     positioned so it paints over the hero; z-index stays below the
+     fixed header (4) and social rail (3). Its own background is
+     opaque, which is what makes the cover read as a cover. */
+  position: relative;
+  z-index: 1;
+  scroll-margin-block-start: var(--header-height);
+
+  --color-fg: var(--color-fg-on-light);
+  --color-fg-muted: var(--color-fg-muted-on-light);
+  --color-border: var(--color-border-on-light);
+  --color-accent: var(--color-accent-on-light);
+  --color-brand: var(--color-brand-on-light);
+
+  color: var(--color-fg);
+  background-color: var(--color-bg-light);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  /* The split lives here now, not in a nested grid, so the rule can
+     span every row and run the section's full height. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 0.8fr);
+  gap: var(--space-7);
+  align-items: stretch;
+  /* The sticky stack lands this section's top edge at the viewport
+     top, where the fixed header sits, so the start padding has to
+     clear it. The FULL --header-height, not just the bar: the topbar
+     only collapses inside a prefers-reduced-motion + @supports guard,
+     so for a reduced-motion user, or any browser without scroll
+     timelines, it is still there at 116px. */
+  --inner-pad-top: max(
+    var(--section-pad-y),
+    calc(var(--header-height) + var(--space-5))
+  );
+
+  padding-block-start: var(--inner-pad-top);
+  padding-block-end: var(--section-pad-y);
+  padding-inline: var(--gutter-page);
+}
+
+.copy {
+  min-width: 0;
+}
+
+.title {
+  margin: 0 0 var(--space-5);
+  font-size: var(--text-display);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+}
+
+/* Two-tone, as the reference has it: the last word drops back so the
+   pair reads as one phrase with a stressed opening rather than two
+   equal words. Keyed off the word spans, so it needs no extra markup
+   and adapts if the title changes length. */
+.title [data-word]:last-child {
+  color: var(--color-brand);
+}
+
+.lead {
+  /* Justified, with hyphenation. The two go together: without
+     hyphens: auto the browser can only stretch the word spaces, and a
+     measure this narrow opens rivers of white down the paragraph.
+     Hyphenation needs a language to know where words may break, which
+     <html lang> now supplies — en-MY or ms-MY. */
+  text-align: justify;
+  hyphens: auto;
+
+  margin: 0;
+  font-size: var(--text-lead);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-lead);
+  color: var(--color-fg-muted);
+}
+
+/* --- Split: copy and stats against the portrait ------------------ */
+
+/* Spans every row of .inner, so it runs the full height of the
+   section's panel — top padding to bottom padding — and genuinely
+   splits it rather than just separating two blocks. */
+/* The orange field. It starts in the rule's old track and runs to the
+   right, so its leading edge sits exactly where the hairline did.
+
+   Every offset here cancels one of .inner's own paddings so the panel
+   reaches the true edges of the section rather than stopping at the
+   content box — --inner-pad-top is hoisted onto .inner for precisely
+   this reason. Without the inline-end bleed the gutter would leave a
+   white strip down the right of the screen. */
+.panel {
+  grid-column: 2 / -1;
+  align-self: stretch;
+  display: grid;
+  align-content: center;
+  /* The generated buttons and dots paint outside the track's box, so
+     the panel has to be their containing block. */
+  position: relative;
+  margin-block: calc(-1 * var(--inner-pad-top)) calc(-1 * var(--section-pad-y));
+  margin-inline-end: calc(-1 * var(--gutter-page));
+  padding-block: var(--inner-pad-top) var(--section-pad-y);
+  padding-inline: var(--space-7) var(--gutter-page);
+  background-color: var(--panel-bg, var(--color-brand-on-light));
+}
+
+/* Indented from the intro above it, which is what gives the block its
+   stepped look in the reference instead of a flat left edge. */
+/* The spacing that used to come from .split's top margin — that
+   wrapper is gone, so the gap has to live here or the intro and the
+   supporting line collide. */
+.aside {
+  align-self: start;
+  margin-block-start: var(--space-7);
+  padding-inline-start: clamp(0rem, 4vw, 3.5rem);
+}
+
+.support {
+  /* Justified, with hyphenation. The two go together: without
+     hyphens: auto the browser can only stretch the word spaces, and a
+     measure this narrow opens rivers of white down the paragraph.
+     Hyphenation needs a language to know where words may break, which
+     <html lang> now supplies — en-MY or ms-MY. */
+  text-align: justify;
+  hyphens: auto;
+
+  max-width: 26rem;
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--color-fg);
+}
+
+/* A primary action: the filled orange, and the shared button metrics
+   from tokens.css. It used to be 12px uppercase, which made it a
+   different size and case from the two other filled buttons on the
+   page — the uppercase treatment belongs to the carousel controls,
+   which are a different tier. White on
+   --color-brand-on-light is 5.2:1. The chevron keeps the hero CTA's
+   nudge, which is what stops it reading as a plain coloured slab. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block-start: var(--space-5);
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  font-size: var(--btn-font-size);
+  line-height: var(--btn-line-height);
+  font-weight: var(--btn-font-weight);
+  color: #ffffff;
+  background-color: var(--color-brand-fill);
+  border: var(--btn-border-width) solid var(--color-brand-fill);
+  border-radius: var(--radius-pill);
+  /* The reveal's own properties are restated here. This element also
+     carries data-reveal, and `transition` is a shorthand — declaring
+     one at equal specificity replaced the reveal's entirely, so the
+     button snapped to its final position instead of arriving with the
+     rest of the column. */
+  transition:
+    opacity var(--reveal-duration) var(--ease-reveal),
+    translate var(--reveal-duration) var(--ease-reveal),
+    background-color var(--transition-base),
+    border-color var(--transition-base);
+  /* The shorthand above resets transition-delay to 0, which would
+     drop the per-element --reveal-delay and collapse the stagger.
+     Restated after it, deliberately. */
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/* Darkens on hover, matching the card CTA — on a light surface a
+   filled button reads as pressed by getting deeper, not lighter. */
+.cta:hover {
+  background-color: var(--color-brand-fill-hover);
+  border-color: var(--color-brand-fill-edge);
+}
+
+.ctaIcon {
+  width: 1.25rem;
+  height: 0.75rem;
+  transition: transform var(--transition-base);
+}
+
+.cta:hover .ctaIcon {
+  transform: translateX(3px);
+}
+
+/* --- Stats -------------------------------------------------------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6) var(--space-5);
+  max-width: 26rem;
+  margin: var(--space-7) 0 0;
+  padding-block-start: var(--space-6);
+  /* The rule above the figures, as the reference has it. */
+  border-block-start: 1px solid var(--color-border);
+  list-style: none;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* One step down from the section heading. At --text-display these
+   matched the 50px title, so a supporting figure carried the same
+   weight as the section's own name. */
+.statValue {
+  /* Blue, not ink: these four figures are the page's only raw data,
+     and blue is the droplet's colour in the lockup — orange stays with
+     the wordmark's job of stressing phrases and driving buttons.
+     Resolves to --color-accent-on-light here, 6.85:1 on white. */
+  color: var(--color-accent);
+  font-size: var(--text-4xl);
+  line-height: 1;
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.statLabel {
+  font-size: var(--text-label);
+  line-height: var(--leading-body);
+  color: var(--color-fg-muted);
+}
+
+/* --- Portrait ----------------------------------------------------- */
+
+/* The width is capped, not the height. A portrait ratio multiplies
+   its column width into height, so letting the column track the
+   viewport made this 82-91% of the screen — taller than the copy
+   beside it by up to 495px, and the tallest thing in the section by
+   far. Clamping the width keeps the portrait a portrait while holding
+   it near the height of the column it sits next to.
+
+   max-height is the backstop for short, wide windows, where 26vw can
+   still resolve taller than the viewport. */
+.media {
+  position: relative;
+  align-self: center;
+  justify-self: center;
+  width: 100%;
+  max-width: clamp(16rem, 24vw, 26rem);
+  aspect-ratio: 4 / 5;
+  max-height: 66vh;
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-media-on-light);
+}
+
+.image {
+  object-fit: cover;
+}
+
+/* --- Narrow viewports --------------------------------------------- */
+
+@media (max-width: 64rem) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Stacked, the panel becomes a full-width band under the copy
+     rather than a column beside it. */
+  .panel {
+    grid-column: 1 / -1;
+    margin-inline: calc(-1 * var(--gutter-page));
+    padding-inline: var(--gutter-page);
+    padding-block: var(--space-7);
+    margin-block-start: var(--space-7);
+    margin-block-end: calc(-1 * var(--section-pad-y));
+  }
+
+  .aside {
+    padding-inline-start: 0;
+  }
+
+  /* Picture first once stacked: a column of text with an image dropped
+     at the bottom reads as an afterthought. */
+  .media {
+    order: -1;
+    justify-self: stretch;
+    max-width: none;
+    aspect-ratio: 16 / 10;
+    max-height: none;
+  }
+}
+
+@media (max-width: 48rem) {
+  .title {
+    font-size: var(--text-4xl);
+  }
+
+  .statValue {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* --- Narrow viewports -------------------------------------------- */
+
+@media (max-width: 64rem) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  /* Stacked, each block keeps its own start rule — there is no
+     between-columns relationship left to express, so nothing flips. */
+}
+

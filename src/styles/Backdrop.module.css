@@ -1,0 +1,29 @@
+/* Positioned by the host section; this module covers only the paint.
+
+   Three layers, front to back: the accent blue glowing in from the
+   top corner, the brand orange answering it from the opposite one,
+   and a dot grid across the whole field. The glows are what stop the
+   grid reading as graph paper. */
+.backdrop {
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      55% 60% at 88% 0%,
+      color-mix(in srgb, var(--color-accent) 26%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      45% 50% at 6% 100%,
+      color-mix(in srgb, var(--color-brand) 14%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--color-accent-bright) 22%, transparent) 1px,
+      transparent 1.5px
+    );
+  background-size:
+    100% 100%,
+    100% 100%,
+    1.75rem 1.75rem;
+}

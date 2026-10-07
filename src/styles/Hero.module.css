@@ -1,0 +1,191 @@
+.hero {
+  view-timeline-name: --hero-s;
+  /* Pinned so the next section rides up over it. Bounded by .stack in
+     Stack.module.css — see the note there. */
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: flex-end;
+  min-height: 100svh;
+  overflow: hidden;
+  background-color: var(--color-hero-bg);
+  background-image: radial-gradient(
+    120% 90% at 50% 100%,
+    var(--color-hero-bg-deep) 0%,
+    var(--color-hero-bg) 70%
+  );
+}
+
+/* The backdrop fills the section behind everything. */
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Vignette: keeps the navbar legible over the backdrop without
+   blacking out the strip it sits on. The backdrop genuinely runs
+   behind the header now, so this is the only thing dimming it —
+   raise the top stop if the nav gets hard to read. */
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgb(7 11 20 / 0.55) 0%,
+      rgb(7 11 20 / 0.25) 14%,
+      rgb(7 11 20 / 0) 38%
+    ),
+    linear-gradient(
+      to top,
+      rgb(7 11 20 / 0.6) 0%,
+      rgb(7 11 20 / 0.25) 18%,
+      rgb(7 11 20 / 0) 42%
+    );
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-inline: var(--gutter-page);
+  /* Content is bottom-aligned, so nothing collides today — this
+     reserves the overlaid header's strip for when it isn't. */
+  padding-block-start: var(--header-height);
+  padding-block-end: var(--hero-copy-bottom);
+  /* The reference carries copy over photography with a shadow
+     rather than relying on the scrim alone — the same trick works
+     over the backdrop. */
+  text-shadow: var(--text-shadow-hero);
+}
+
+/* Hero copy, to the reference's spec:
+     headline  50px / 55px / max-width 700px
+     subhead   18px / 22px / 300
+   The headline now carries the page's display weight rather than the
+   reference's 500. Contrast comes from scale AND weight: the subhead
+   drops to 300 directly beneath it, so the pair still reads as one
+   heavy line over one light one. */
+.headline {
+  max-width: var(--measure);
+  margin: 0;
+  font-size: var(--text-display);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  color: var(--color-fg);
+}
+
+/* Signal orange on the closing phrase. Editorial emphasis only — every
+   interactive thing in the hero stays blue. */
+.headlineEmphasis {
+  color: var(--color-brand);
+}
+
+.subhead {
+  /* Justified, with hyphenation. The two go together: without
+     hyphens: auto the browser can only stretch the word spaces, and a
+     measure this narrow opens rivers of white down the paragraph.
+     Hyphenation needs a language to know where words may break, which
+     <html lang> supplies. */
+  text-align: justify;
+  hyphens: auto;
+
+  max-width: var(--measure);
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-lead);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-lead);
+  color: var(--color-fg);
+}
+
+@media (max-width: 48rem) {
+  .headline {
+    font-size: var(--text-5xl);
+  }
+}
+
+/* Read-more CTA, to the reference's spec:
+     icon   32x32 circled arrow
+     label  18px / 22px, .625rem to the right of the icon
+     block  1.25rem below the copy above it
+   The reference uses a background-image SVG; this is inline so it
+   can take currentColor and travel with the text. */
+/* The hero's primary action, so it takes the signal orange like the
+   filled buttons do — currentColor carries it to both the label and
+   the circled chevron, which strokes with it.
+
+   Stays a text link rather than becoming a filled pill: it sits on the
+   backdrop with nothing behind it, and a solid block there would fight the
+   canvas instead of sitting in it. --color-brand resolves to the
+   dark-surface pair here, 9.4:1 against the hero field. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cta-gap);
+  margin-block-start: var(--cta-offset);
+  color: var(--color-brand);
+}
+
+.ctaIcon {
+  flex-shrink: 0;
+  width: var(--cta-icon-size);
+  height: var(--cta-icon-size);
+  transition: transform var(--transition-base);
+}
+
+/* The reference's plain read-more has no hover state of its own
+   and just catches its site-wide link fade. The nudge is borrowed
+   from its animated variant instead — an affordance that costs no
+   colour change. */
+.cta:hover .ctaIcon {
+  transform: translateX(3px);
+}
+
+.ctaLabel {
+  font-size: var(--text-lead);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-heading);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ctaIcon {
+    transition: none;
+  }
+
+  .cta:hover .ctaIcon {
+    transform: none;
+  }
+}
+
+/* --- Scroll exit -------------------------------------------------- */
+
+/* The copy grows and dissolves as the hero leaves, so it appears to
+   recede into the backdrop rather than simply scrolling off. Driven by
+   the hero's own view timeline, named on .hero above. */
+@keyframes hero-exit {
+  to {
+    scale: 1.22;
+    opacity: 0;
+    /* Defocusing as it grows is what sells the recession — scale and
+       fade alone read as the copy being lifted toward the viewer.
+       Interpolating from an absent filter is well defined: `none`
+       behaves as the identity, blur(0), so no `from` block is
+       needed. */
+    filter: blur(6px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .content {
+      animation: hero-exit both linear;
+      animation-timeline: --hero-s;
+      animation-range: exit 0% exit 75%;
+    }
+  }
+}

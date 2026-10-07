@@ -1,0 +1,9 @@
+.name {
+  display: inline-block;
+  font-family: var(--font-nav);
+  font-size: var(--text-wordmark);
+  line-height: 1;
+  font-weight: var(--weight-nav);
+  color: inherit;
+  white-space: nowrap;
+}

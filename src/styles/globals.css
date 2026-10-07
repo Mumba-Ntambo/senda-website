@@ -1,0 +1,187 @@
+/* ---------------------------------------------------------------
+   Global entry point. Import order matters: reset, then tokens,
+   then element typography. Component styles live in *.module.css.
+   --------------------------------------------------------------- */
+
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./typography.css";
+
+html {
+  height: 100%;
+  color-scheme: dark;
+  /* The whole page renders at 90% while the browser sits at 100%.
+     Every token in tokens.css is in rem — type, spacing, gutters,
+     radii — so one root value scales the lot in proportion and
+     nothing has to be re-tuned individually.
+
+     A PERCENTAGE, not 14.4px. This is 90% of whatever the reader's
+     own browser default is, so someone who has raised their default
+     for legibility keeps the benefit; hardcoding a pixel size would
+     throw their setting away. Border hairlines and the few px radii
+     stay put, which is what you want — a 1px rule should not become
+     0.9px. Viewport units are untouched too, so the hero still fills
+     the screen. */
+  font-size: 90%;
+}
+
+/* Set by MobileNav while its panel is open. Lenis drives the window
+   scroll in root mode, so this is what actually holds the page still
+   behind the overlay. */
+html[data-menu-open] {
+  overflow: hidden;
+}
+
+/* Registered so it interpolates. An unregistered custom property
+   would flip discretely at the keyframe instead of easing, and the
+   initial value is what keeps nav links legible in browsers with no
+   scroll-timeline support — there the animation never runs. */
+@property --active {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+body {
+  position: relative;
+  min-height: 100%;
+  margin: 0;
+  /* Hoists the sections' view timelines so elements outside them —
+     the nav links in the fixed header — can read them. */
+  timeline-scope: --hero-s, --services-s, --why-s, --about-us-s,
+    --contact-s;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg);
+}
+
+main {
+  flex: 1;
+  /* body is a column flex. Without this, min-width:auto sizes main to
+     the services track's content width (every card in a row), the
+     page grows with it, and the carousel never overflows — so a
+     phone swipe and Previous/Next both do nothing. */
+  min-width: 0;
+}
+
+/* Visible to screen readers and search engines, not to the eye. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---------------------------------------------------------------
+   Entrance reveal.
+
+   Timed, not scroll-linked. An element crosses into view once and
+   then plays its own 700ms eased transition, the way a Canva element
+   animates in — it has a duration of its own instead of advancing
+   only while the wheel turns. RevealObserver adds .is-revealed.
+
+   The .js-reveal gate matters: the hidden state is applied only
+   after the observer has mounted and confirmed JS is running. Bare
+   `[data-reveal] { opacity: 0 }` would leave the page blank rather
+   than merely unanimated if the bundle failed, and would hide the
+   content from anything that does not execute scripts.
+
+   No `animation-timeline` anywhere here, so this runs in every
+   browser rather than Chromium and Safari 26+ only.
+   --------------------------------------------------------------- */
+[data-reveal] {
+  transition:
+    opacity var(--reveal-duration) var(--ease-reveal),
+    translate var(--reveal-duration) var(--ease-reveal);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js-reveal [data-reveal] {
+  opacity: 0;
+  /* Standalone `translate`, so a component animating its own
+     `transform` (the Services card hover lift) is untouched. */
+  translate: 0 1.75rem;
+}
+
+/* Directional variants. The value on the attribute picks the edge the
+   element arrives from, so a block can be given a direction in the
+   markup without a class per case.
+
+   Sideways entrances travel further than the default rise: horizontal
+   movement reads as less distance than vertical at the same value,
+   because the eye is already tracking a column of text downward. */
+.js-reveal [data-reveal="left"] {
+  translate: -3rem 0;
+}
+
+.js-reveal [data-reveal="right"] {
+  translate: 3rem 0;
+}
+
+.js-reveal [data-reveal="down"] {
+  translate: 0 -1.75rem;
+}
+
+.js-reveal [data-reveal].is-revealed {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* Per-word cascade. The container is never hidden — only its words
+   are — so a heading keeps its layout and the line never reflows as
+   it animates.
+
+   translate is in `em`, so each word lifts in proportion to its own
+   type size: a 50px heading travels further than an 18px paragraph
+   without either needing its own value. */
+[data-reveal-words] [data-word] {
+  display: inline-block;
+  transition:
+    opacity 620ms var(--ease-reveal),
+    translate 620ms var(--ease-reveal);
+  transition-delay: calc(
+    var(--word-base, 0ms) + var(--word-index, 0) * var(--word-step, 42ms)
+  );
+}
+
+.js-reveal [data-reveal-words] [data-word] {
+  opacity: 0;
+  translate: 0 0.7em;
+}
+
+.js-reveal [data-reveal-words].is-revealed [data-word] {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* Opting out means no movement, not a blank page. */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    transition: none;
+  }
+
+  .js-reveal [data-reveal] {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  [data-reveal-words] [data-word] {
+    transition: none;
+  }
+
+  .js-reveal [data-reveal-words] [data-word] {
+    opacity: 1;
+    translate: 0 0;
+  }
+}

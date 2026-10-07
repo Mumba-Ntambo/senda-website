@@ -1,0 +1,250 @@
+/* A light section, like Why Senda and Services. Remapping the ink
+   tokens here is what carries the flip to every descendant — the links,
+   the rules, the address and the social icons all read --color-fg and
+   --color-fg-muted and follow without knowing the surface changed.
+
+   Contact directly above ends on the page black outside its orange and
+   white slab, so the two part cleanly with no rule needed between
+   them. */
+.footer {
+  position: relative;
+  --color-fg: var(--color-fg-on-light);
+  --color-fg-muted: var(--color-fg-muted-on-light);
+  --color-border: var(--color-border-on-light);
+  --color-accent: var(--color-accent-on-light);
+  --color-brand: var(--color-brand-on-light);
+
+  color: var(--color-fg);
+  background-color: var(--color-bg-light);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  padding-block: var(--space-8) var(--space-6);
+  padding-inline: var(--gutter-page);
+}
+
+/* --- Brand beside the map -------------------------------------- */
+
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
+  gap: var(--space-8) var(--space-7);
+  padding-block-end: var(--space-7);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.brand {
+  max-width: 22rem;
+}
+
+.wordmark {
+  display: inline-block;
+  color: var(--color-fg);
+}
+
+.tagline {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-body);
+  color: var(--color-fg-muted);
+}
+
+.address {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-block-start: var(--space-5);
+  font-style: normal;
+  font-size: var(--text-label);
+  line-height: var(--leading-body);
+  color: var(--color-fg-muted);
+}
+
+/* The company line is the one to find at a glance; the place beneath
+   it stays quiet. */
+.addressLine:first-child {
+  font-weight: var(--weight-subheading);
+  color: var(--color-fg);
+}
+
+.email {
+  display: inline-block;
+  margin-block-start: var(--space-3);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-subheading);
+  color: var(--color-fg);
+  transition: color var(--transition-base);
+}
+
+.email:hover,
+.email:focus-visible {
+  color: var(--color-brand);
+}
+
+/* --- Sitemap ---------------------------------------------------- */
+
+.sitemap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: var(--space-6) var(--space-5);
+  align-items: start;
+}
+
+/* Twelve services against three partners would run one column far
+   down the page while its neighbours stopped short. A long group
+   takes two tracks and flows its list across both, which lands every
+   column at roughly the same depth. */
+.group[data-wide] {
+  grid-column: span 2;
+}
+
+.group[data-wide] .groupLinks {
+  columns: 2;
+  column-gap: var(--space-5);
+}
+
+.groupLinks li {
+  /* Multi-column would otherwise be free to break a wrapped label
+     across the column boundary. */
+  break-inside: avoid;
+}
+
+.groupTitle {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.groupLink {
+  color: var(--color-fg);
+  transition: color var(--transition-base);
+}
+
+.groupLink:hover,
+.groupLink:focus-visible {
+  color: var(--color-brand);
+}
+
+.groupLinks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The wide group flows rather than stacks, so the flex gap does not
+   apply to it — the rows carry their own spacing instead. */
+.group[data-wide] .groupLinks {
+  display: block;
+}
+
+.group[data-wide] .groupLinks li + li {
+  margin-block-start: var(--space-3);
+}
+
+/* 14px / 20px / 300 — light, where the header runs 700. */
+.link {
+  font-size: var(--text-label);
+  line-height: var(--leading-prose);
+  font-weight: var(--weight-lead);
+  color: var(--color-fg-muted);
+  transition: color var(--transition-base);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--color-fg);
+}
+
+/* --- Bottom row ------------------------------------------------ */
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-5);
+  margin-block-start: var(--space-6);
+}
+
+.copyright {
+  margin: 0;
+  font-size: var(--text-label);
+  line-height: var(--leading-prose);
+  font-weight: var(--weight-lead);
+  color: var(--color-fg-muted);
+}
+
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Pushes the icons to the far edge while copyright and legal stay
+   grouped at the start. */
+.social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin: 0 0 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.socialLink {
+  display: block;
+  color: var(--color-fg-muted);
+  transition: color var(--transition-base);
+}
+
+.socialLink:hover,
+.socialLink:focus-visible {
+  color: var(--color-fg);
+}
+
+.socialIcon {
+  display: block;
+  width: var(--social-icon-sm);
+  height: var(--social-icon-sm);
+}
+
+/* --- Narrow viewports ------------------------------------------ */
+
+@media (max-width: 64rem) {
+  .top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brand {
+    max-width: none;
+  }
+}
+
+@media (max-width: 48rem) {
+  .sitemap {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Two tracks is the whole row here, and a second inner column on
+     top of that would leave labels a few characters wide. */
+  .group[data-wide] .groupLinks {
+    columns: 1;
+  }
+
+  .social {
+    margin-inline-start: 0;
+  }
+}

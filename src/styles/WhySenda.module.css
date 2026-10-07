@@ -1,0 +1,275 @@
+.section {
+  /* Named so the nav link for this section can read it. */
+  view-timeline-name: --why-s;
+  position: relative;
+  scroll-margin-block-start: var(--header-height);
+
+  /* Light section. Redefining the ink tokens here is what carries the
+     flip into SectionHeading, which lives in its own module; `color`
+     is restated because the inherited value was already computed from
+     the root token further up the tree.
+
+     White rather than the page black: Contact directly below is
+     --color-bg, so a dark surface here made the two read as one
+     continuous block — and the blue lead card carries furthest off
+     white. Services above is dark now, so the two part on their own
+     and this no longer has to hold a cooler tint to separate them. */
+  --color-fg: var(--color-fg-on-light);
+  --color-fg-muted: var(--color-fg-muted-on-light);
+  --color-border: var(--color-border-on-light);
+  --color-accent: var(--color-accent-on-light);
+  --color-brand: var(--color-brand-on-light);
+
+  color: var(--color-fg);
+  background-color: var(--color-bg-light);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-8);
+  padding-block: var(--section-pad-y);
+  padding-inline: var(--gutter-page);
+}
+
+/* --- Layout ------------------------------------------------------ */
+
+/* Two reason columns flanking the lead card. The middle track is sized
+   rather than fluid so the card keeps its proportions while the
+   reason columns absorb the remaining width. */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(19rem, 26vw, 25rem) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-7);
+  width: 100%;
+  max-width: var(--measure-wide, 78rem);
+}
+
+.column {
+  display: grid;
+  align-content: center;
+  gap: var(--space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The card is last in source order so the reason columns read in
+   sequence; this puts it back in the middle visually. */
+.centre {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.column:first-of-type {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.column:last-of-type {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+/* --- Reason ------------------------------------------------------ */
+
+.item {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.icon {
+  display: flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  /* Blue marks around the lead card — the lockup's own ratio. */
+  color: var(--color-accent);
+  transition: color var(--transition-base);
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.item:hover .icon {
+  color: var(--color-accent-bright);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-lg);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-subheading);
+}
+
+.body {
+  max-width: 22rem;
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-body);
+  color: var(--color-fg-muted);
+}
+
+/* --- Lead card --------------------------------------------------- */
+
+/* The offset plate behind the card, picked up from the reference
+   layout. A tint of the card's own blue rather than a new colour, and
+   inert to pointers so it never intercepts a click. */
+.centre::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  translate: var(--space-5) var(--space-5);
+  border-radius: var(--radius-xl);
+  background-color: color-mix(in srgb, var(--color-lead-card) 34%, transparent);
+  pointer-events: none;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  padding: var(--space-7) var(--space-6);
+  text-align: center;
+  border-radius: var(--radius-xl);
+  /* Blue, not the house orange: it stops the card competing with the
+     orange CTA directly beneath it. */
+  background-color: var(--color-lead-card);
+  box-shadow: 0 1.25rem 2.5rem rgb(11 14 20 / 0.16);
+
+  /* Re-point the ink tokens so the card's copy inverts with the fill
+     instead of being restated declaration by declaration. */
+  --color-fg: #ffffff;
+  --color-fg-muted: rgb(255 255 255 / 0.85);
+
+  color: var(--color-fg);
+}
+
+/* Seated on a translucent plate so the glyph reads as an object on
+   the panel rather than floating on the orange. */
+.cardIcon {
+  display: flex;
+  width: 4rem;
+  height: 4rem;
+  padding: 0.85rem;
+  border-radius: var(--radius-lg);
+  background-color: rgb(255 255 255 / 0.16);
+  color: #ffffff;
+}
+
+.cardIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-subheading);
+}
+
+.cardBody {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-body);
+  color: var(--color-fg-muted);
+}
+
+/* --- Action ------------------------------------------------------ */
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+/* The filled orange and the shared button metrics from tokens.css, same
+   tier as the About Us and Contact actions. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--btn-min-height, 2.75rem);
+  padding: var(--btn-pad-y, 0.75rem) var(--btn-pad-x, 1.5rem);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  line-height: var(--leading-flat);
+  color: #ffffff;
+  border: var(--btn-border-width, 1px) solid var(--color-brand-fill);
+  border-radius: var(--radius-btn);
+  background-color: var(--color-brand-fill);
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.cta:hover {
+  background-color: var(--color-brand-fill-hover);
+  border-color: var(--color-brand-fill-edge);
+}
+
+/* --- Narrow viewports -------------------------------------------- */
+
+/* The three-track split needs real width. Below it the card leads and
+   the four reasons fall into a 2x2 beneath. */
+@media (max-width: 64rem) {
+  .layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-7) var(--space-6);
+  }
+
+  .centre {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    max-width: 30rem;
+    justify-self: center;
+    width: 100%;
+  }
+
+  .column:first-of-type {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .column:last-of-type {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 48rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .column:first-of-type {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .column:last-of-type {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .cardTitle {
+    font-size: var(--text-xl);
+  }
+
+  /* The offset plate crowds the gutter at phone width. */
+  .centre::after {
+    translate: var(--space-3) var(--space-3);
+  }
+}
