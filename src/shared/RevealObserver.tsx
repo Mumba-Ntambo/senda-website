@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 
+import { usePathname } from "next/navigation";
+
 /* Canva-style entrances: an element crosses into view once, then
    plays a timed, eased animation on its own clock. That is the part
    a scroll-linked animation cannot do — `animation-timeline` welds
@@ -17,8 +19,15 @@ import { useEffect } from "react";
    opting in is just an attribute on the markup: `data-reveal` fades
    the element itself, `data-reveal-words` leaves it alone and lets its
    per-word spans cascade instead. Both get the same .is-revealed
-   class — only the CSS differs. */
+   class — only the CSS differs.
+
+   Keyed on the pathname: the layout this sits in survives a
+   client-side navigation, so without it the effect would run for the
+   first page only and every page reached through a <Link> would keep
+   its reveal elements hidden until a full reload. */
 export function RevealObserver() {
+  const pathname = usePathname();
+
   useEffect(() => {
     const root = document.documentElement;
 
@@ -62,7 +71,7 @@ export function RevealObserver() {
 
     nodes.forEach((n) => observer.observe(n));
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   return null;
 }
