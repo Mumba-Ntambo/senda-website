@@ -69,11 +69,11 @@ const products = [
     summary:
       "Yenda is a platform for Zambian intercity bus operators. It records every ticket sold and every parcel carried, so an operator can see what each trip earned and where money went missing. Passengers get a public side for booking seats and sending parcels.",
     highlights: [
-      "Four apps sharing one database",
+      "Three apps sharing one database",
       "Tickets checked by QR code, even without a signal",
       "Every trip reconciled against what was sold",
     ],
-    partsTitle: "Four apps, one platform",
+    partsTitle: "Three apps, one platform",
     parts: [
       {
         title: "Owner dashboard",
@@ -89,11 +89,6 @@ const products = [
         title: "Customer app",
         audience: "For passengers",
         body: "Search trips, pick a seat on the bus layout and receive a digital ticket with a QR code. Send a parcel and follow it on a map.",
-      },
-      {
-        title: "Admin console",
-        audience: "For the platform team",
-        body: "A live map across operators, fleet and parcel support tools, and checks that flag unusual patterns in sales.",
       },
     ],
     ctaLabel: "Ask about Yenda",

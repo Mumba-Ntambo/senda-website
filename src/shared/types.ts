@@ -37,7 +37,7 @@ export type Service = {
   tag: string;
 };
 
-/* One part of a product — for Yenda, one of its four apps. */
+/* One part of a product — for Yenda, one of its apps. */
 export type ProductPart = {
   /** Key into the icon map in productIcons.tsx. */
   icon: "dashboard" | "crew" | "customer" | "admin";
