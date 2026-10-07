@@ -10,6 +10,7 @@ export const brand = {
   ctaHref: "#services",
   whyCtaHref: "#contact",
   aboutUsCtaHref: "#services",
+  teamCtaHref: "/#contact",
 
   address: ["Senda Technologies Ltd", "Lusaka, Zambia", "Registered with PACRA"],
   contactEmail,
@@ -68,6 +69,11 @@ export const productMeta = [
   },
 ] as const;
 
+/* One per person, in the order en.ts lists them. */
+export const teamMeta = [
+  { slug: "ambwene-mwalukasa", image: "/team/ambwene-mwalukasa.jpg" },
+] as const;
+
 /* The nav shape: which sections exist, what they point at, and how
    many children each has. en.ts supplies label arrays that line up
    with these. The service cards carry no ids of their own, so every
@@ -82,7 +88,14 @@ export const navMeta = [
     href: "/products",
     children: productMeta.map((product) => `/products#${product.slug}`),
   },
-  { href: "/#about-us", children: ["/#about-us", "/#about-us"] },
+  {
+    href: "/#about-us",
+    children: [
+      "/#about-us",
+      "/#about-us",
+      "/team",
+    ],
+  },
   { href: "/#why", children: Array.from({ length: 5 }, () => "/#why") },
   { href: "/#contact", children: [] },
 ] as const;

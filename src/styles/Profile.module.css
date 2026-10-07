@@ -1,0 +1,133 @@
+/* --- Page band ---------------------------------------------------- */
+
+/* The products page's band, unchanged: every inner page opens on the
+   same surface, so the pieces are composed rather than restated. */
+.hero {
+  composes: hero from "./Products.module.css";
+}
+
+.canvas {
+  composes: canvas from "./Products.module.css";
+}
+
+.vignette {
+  composes: vignette from "./Products.module.css";
+}
+
+.heroContent {
+  composes: heroContent from "./Products.module.css";
+}
+
+.eyebrow {
+  composes: eyebrow from "./Products.module.css";
+}
+
+.headline {
+  composes: headline from "./Products.module.css";
+}
+
+.subhead {
+  composes: subhead from "./Products.module.css";
+}
+
+/* --- Profile ------------------------------------------------------ */
+
+/* The light surface and its ink tokens come from the product section. */
+.profile {
+  composes: product from "./Products.module.css";
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-8);
+  max-width: 82rem;
+  margin-inline: auto;
+  padding-block: var(--section-pad-y);
+  padding-inline: var(--gutter-page);
+}
+
+.media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-media-on-light);
+  box-shadow: 0 1.25rem 2.5rem rgb(11 14 20 / 0.16);
+}
+
+.image {
+  object-fit: cover;
+}
+
+.copy {
+  min-width: 0;
+}
+
+.lead {
+  max-width: var(--measure);
+  margin: 0;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-heading);
+}
+
+.body {
+  max-width: var(--measure);
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-lead);
+  line-height: var(--leading-prose);
+  font-weight: var(--weight-body);
+  color: var(--color-fg-muted);
+}
+
+.interestsTitle {
+  margin: var(--space-6) 0 var(--space-3);
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.interests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.interest {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-medium);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-on-light);
+}
+
+.cta {
+  composes: cta from "./Products.module.css";
+  margin-block-start: var(--space-6);
+}
+
+/* --- Narrow viewports --------------------------------------------- */
+
+@media (max-width: 64rem) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  /* Capped once stacked: at full width a 4:5 portrait would fill the
+     screen before any of the words appear. */
+  .media {
+    max-width: 22rem;
+  }
+}

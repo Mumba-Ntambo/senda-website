@@ -1,0 +1,127 @@
+/* --- Page band ---------------------------------------------------- */
+
+/* The products page's band, composed rather than restated. */
+.hero {
+  composes: hero from "./Products.module.css";
+}
+
+.canvas {
+  composes: canvas from "./Products.module.css";
+}
+
+.vignette {
+  composes: vignette from "./Products.module.css";
+}
+
+.heroContent {
+  composes: heroContent from "./Products.module.css";
+}
+
+.eyebrow {
+  composes: eyebrow from "./Products.module.css";
+}
+
+.headline {
+  composes: headline from "./Products.module.css";
+}
+
+.headlineEmphasis {
+  composes: headlineEmphasis from "./Products.module.css";
+}
+
+.subhead {
+  composes: subhead from "./Products.module.css";
+}
+
+/* --- People ------------------------------------------------------- */
+
+/* The light surface and its ink tokens come from the product section. */
+.team {
+  composes: product from "./Products.module.css";
+}
+
+/* Fixed-width columns, not stretched ones: with one or two people a
+   stretched card would turn each portrait into a poster. */
+.people {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(0, 20rem));
+  gap: var(--space-7) var(--space-6);
+  max-width: 82rem;
+  margin: 0 auto;
+  padding-block: var(--section-pad-y);
+  padding-inline: var(--gutter-page);
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-fg);
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  margin-block-end: var(--space-4);
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-media-on-light);
+  box-shadow: 0 1.25rem 2.5rem rgb(11 14 20 / 0.16);
+}
+
+.image {
+  object-fit: cover;
+  transition: scale var(--transition-base);
+}
+
+.card:hover .image,
+.card:focus-visible .image {
+  scale: 1.03;
+}
+
+.name {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-heading);
+}
+
+.role {
+  margin-block-start: var(--space-1);
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-start: var(--space-3);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  color: var(--color-fg-muted);
+}
+
+.card:hover .more,
+.card:focus-visible .more {
+  color: var(--color-brand);
+}
+
+.moreIcon {
+  width: 1.25rem;
+  height: 0.75rem;
+  transition: transform var(--transition-base);
+}
+
+.card:hover .moreIcon,
+.card:focus-visible .moreIcon {
+  transform: translateX(3px);
+}
+
+@media (max-width: 40rem) {
+  .people {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

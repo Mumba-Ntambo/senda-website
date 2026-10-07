@@ -66,6 +66,19 @@ export type Product = {
   siteHref: string;
 };
 
+/* One person on the team, and the whole of their profile page. */
+export type Person = {
+  /** The last segment of the page's address: /team/<slug>. */
+  slug: string;
+  name: string;
+  role: string;
+  /** Path under /public. */
+  image: string;
+  lead: string;
+  bio: string[];
+  interests: string[];
+};
+
 /* One line of the "what to tell us" list beside the contact form.
    `term` names the kind of detail, `detail` says what is useful. */
 export type ContactAsk = {
@@ -139,6 +152,15 @@ export type Content = {
     productsTitleEmphasis: string;
     productsSubhead: string;
 
+    teamEyebrow: string;
+    teamTitle: string;
+    teamTitleEmphasis: string;
+    teamSubhead: string;
+    teamProfileLabel: string;
+    teamInterestsTitle: string;
+    teamCtaLabel: string;
+    teamCtaHref: string;
+
     footerTagline: string;
   };
   navLinks: NavLink[];
@@ -147,6 +169,7 @@ export type Content = {
   reasons: Reason[];
   services: Service[];
   products: Product[];
+  team: Person[];
   milestones: Milestone[];
   aboutStats: Stat[];
   footerLinks: NavLink[];

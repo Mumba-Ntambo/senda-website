@@ -6,6 +6,7 @@ import {
   reasonMeta,
   serviceMeta,
   socialMeta,
+  teamMeta,
 } from "@/content/shared";
 import type { Content } from "@/shared/types";
 
@@ -100,10 +101,26 @@ const products = [
   },
 ];
 
+const team = [
+  {
+    name: "Ambwene Mwalukasa",
+    role: "Co-founder",
+    lead: "Ambwene is a co-founder of Senda Technologies.",
+    bio: [
+      "He comes to Senda with hands-on experience in financial markets and a strong interest in innovation and entrepreneurship.",
+      "Away from work he travels whenever he can.",
+    ],
+    interests: ["Financial markets", "Innovation", "Entrepreneurship", "Travel"],
+  },
+];
+
 const navLabels = [
   { label: "Services", children: services.map((service) => service.title) },
   { label: "Products", children: products.map((product) => product.name) },
-  { label: "About", children: ["Who we are", "How we work"] },
+  {
+    label: "About",
+    children: ["Who we are", "How we work", "Team"],
+  },
   { label: "Why Senda", children: reasons.map((reason) => reason.title) },
   { label: "Contact Us", children: [] },
 ];
@@ -153,6 +170,14 @@ export const en: Content = {
     productsSubhead:
       "Products designed, built and operated by Senda Technologies.",
 
+    teamEyebrow: "Team",
+    teamTitle: "The people ",
+    teamTitleEmphasis: "behind Senda.",
+    teamSubhead: "Who you work with when you work with Senda Technologies.",
+    teamProfileLabel: "Read profile",
+    teamInterestsTitle: "Interests",
+    teamCtaLabel: "Talk to us",
+
     footerTagline: "Software, end to end, from Lusaka.",
   },
 
@@ -199,6 +224,8 @@ export const en: Content = {
       parts: parts.map((part, j) => ({ ...part, ...partMeta[j] })),
     };
   }),
+
+  team: teamMeta.map((meta, i) => ({ ...meta, ...team[i] })),
 
   /* Steps, not dates: `year` carries the step number. */
   milestones: milestoneMeta.map((meta, i) => ({
