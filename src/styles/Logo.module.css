@@ -1,3 +1,26 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Sized off the wordmark so the pair scales together. */
+.mark {
+  flex-shrink: 0;
+  width: calc(var(--text-wordmark) * 1.45);
+  height: calc(var(--text-wordmark) * 1.45);
+}
+
+/* The mark's own green, not a site token: it is the logo's colour
+   and appears nowhere else on the page. */
+.tile {
+  fill: #1f6f5c;
+}
+
+.glyph {
+  stroke: #fff;
+}
+
 .name {
   display: inline-block;
   font-family: var(--font-nav);
