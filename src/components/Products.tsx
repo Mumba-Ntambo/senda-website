@@ -126,6 +126,34 @@ export async function Products() {
                   <p className={styles.partAudience}>{part.audience}</p>
                   <h4 className={styles.partTitle}>{part.title}</h4>
                   <p className={styles.partBody}>{part.body}</p>
+
+                  {part.href ? (
+                    <a
+                      className={styles.partLink}
+                      href={part.href}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {/* The bare host is the label: it says where the
+                          link goes better than "Open" would. */}
+                      {part.href.replace("https://", "")}
+                      <span className="visually-hidden">
+                        : {part.title}
+                      </span>
+                      <svg
+                        className={styles.siteIcon}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M7 17 17 7M9 7h8v8" />
+                      </svg>
+                    </a>
+                  ) : null}
                 </li>
               ))}
             </ul>

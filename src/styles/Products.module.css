@@ -264,6 +264,9 @@
 
 .part {
   display: grid;
+  /* The last row stretches, which is what lets .partLink sit at the
+     foot. */
+  grid-template-rows: auto auto auto 1fr;
   align-content: start;
   gap: var(--space-2);
   padding: var(--space-5);
@@ -306,6 +309,26 @@
   line-height: var(--leading-prose);
   font-weight: var(--weight-body);
   color: var(--color-fg-muted);
+}
+
+/* Pinned to the foot of the card, so the links line up across the
+   row whatever the length of the copy above them. */
+.partLink {
+  display: inline-flex;
+  align-items: center;
+  align-self: end;
+  gap: var(--space-2);
+  margin-block-start: var(--space-3);
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
+  color: var(--color-brand);
+}
+
+.partLink:hover,
+.partLink:focus-visible {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
 }
 
 /* --- Narrow viewports --------------------------------------------- */

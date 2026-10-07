@@ -57,7 +57,14 @@ export const productMeta = [
     slug: "yenda",
     ctaHref: "/#contact",
     siteHref: "https://yenda.site",
-    partIcons: ["dashboard", "crew", "customer", "admin"],
+    /* The admin console has no href: it is for the platform team, not
+       something to send a visitor to. */
+    parts: [
+      { icon: "dashboard", href: "https://owner.yenda.site" },
+      { icon: "crew", href: "https://crew.yenda.site" },
+      { icon: "customer", href: "https://yenda.site" },
+      { icon: "admin" },
+    ],
   },
 ] as const;
 

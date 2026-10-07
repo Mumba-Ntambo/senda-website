@@ -44,6 +44,8 @@ export type ProductPart = {
   title: string;
   audience: string;
   body: string;
+  /** Where this part lives, when it has a public address. */
+  href?: string;
 };
 
 /* One entry on the products page. */

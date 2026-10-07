@@ -191,12 +191,12 @@ export const en: Content = {
   services: serviceMeta.map((meta, i) => ({ ...meta, ...services[i] })),
 
   products: productMeta.map((meta, i) => {
-    const { partIcons, ...rest } = meta;
+    const { parts: partMeta, ...rest } = meta;
     const { parts, ...copy } = products[i];
     return {
       ...rest,
       ...copy,
-      parts: parts.map((part, j) => ({ ...part, icon: partIcons[j] })),
+      parts: parts.map((part, j) => ({ ...part, ...partMeta[j] })),
     };
   }),
 
