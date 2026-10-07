@@ -1,38 +1,19 @@
-/* Light section. Redefining the ink tokens here is what carries the
-   flip into SectionHeading, which lives in its own module; `color`
-   is restated because the inherited value was already computed from
-   the root token further up the tree. */
 .section {
   /* Named so the nav link for this section can read it. */
   view-timeline-name: --services-s;
-  /* Sits outside the sticky stack now, so it simply follows About Us
-     in normal flow — nothing above it is pinned for it to cover. */
   position: relative;
   scroll-margin-block-start: var(--header-height);
 
-  /* Dark now, so it keeps the page's root ink tokens rather than
-     remapping them — the heading, eyebrow and carousel controls are
-     all white-on-dark by inheritance. The on-light set moved down to
-     .card, which is still white and still needs it.
-
-     This also fixes the rhythm: About Us above and Why Senda
-     below are both white, so a light section here made three in a
-     row. Dark between them gives the page an alternation, and it is
-     what lets the backdrop read the way it does in the hero.
-
-     One token still: change --services-bg to restyle the section. */
+  /* Dark, so it keeps the page's root ink tokens. About Us above and
+     Why Senda below are both white; dark between them gives the page
+     its alternation. */
   color: var(--color-fg);
   background-color: var(--services-bg, var(--color-bg));
 }
 
-/* Dimmer than the hero's: the hero is a full-bleed field with
-   nothing but a headline over it, whereas this one runs behind a row
-   of cards and has to stay texture. */
+/* Dimmer than the hero's: this one runs behind a list and has to stay
+   texture. */
 .section .canvas {
-  /* Decoration. It covers the whole section, so it must never be a
-     target — .inner is lifted above it and takes the taps, but an
-     absolutely positioned canvas spanning a section has no business
-     being hit-testable either way. */
   pointer-events: none;
   position: absolute;
   inset: 0;
@@ -42,9 +23,7 @@
   opacity: 0.6;
 }
 
-/* Over the canvas: the cards and copy would otherwise paint beneath
-   it, since it comes first in the source and both sit in the same
-   stacking context. */
+/* Over the backdrop, which comes first in the source. */
 .inner {
   position: relative;
   z-index: 1;
@@ -53,701 +32,180 @@
   padding-inline: var(--gutter-page);
 }
 
-/* --- Grid -------------------------------------------------------- */
+/* --- Index -------------------------------------------------------- */
 
-/* A horizontal scroll track rather than a wrapping grid. Cards are
-   sized to fit --per-view exactly, so on a wide screen the four
-   services fill the row and nothing overflows — the track behaves
-   like the plain row it replaced. Once the cards outrun the width,
-   it scrolls and ServicesCarousel renders the arrows beneath.
-
-   Sized from a variable instead of auto-fit/minmax because the
-   arrows need whole cards to step through; auto-fit would reflow the
-   count at arbitrary widths and leave a partial card at the edge. */
-.grid {
-  /* Three, not four. With four services a four-up row fits exactly,
-     nothing overflows, and the carousel controls have nothing to do —
-     so they never render. Showing three leaves the fourth card
-     part-visible at the edge, which both signals there is more and
-     gives the arrows something to move. Set this back to 4 to return
-     to a static row that only gains controls once a fifth service
-     exists. */
-  --per-view: 3;
-  --card-gap: var(--space-5);
-
-  display: flex;
-  gap: var(--card-gap);
-  margin: var(--space-7) 0 0;
-  /* Bound to the section, not to the cards. A flex item's default
-     min-width:auto would let this grow to the full row, at which
-     point overflow never triggers and the track cannot be dragged. */
-  width: 100%;
-  min-width: 0;
-  /* Room for the card shadow, which the scroll container would
-     otherwise clip along the top and bottom edges. */
-  padding: var(--space-2) 0;
+.list {
+  max-width: 78rem;
+  margin: var(--space-8) auto 0;
+  padding: 0;
   list-style: none;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-  /* proximity, not mandatory. Mandatory snap overrides a programmatic
-     scroll — it drags the track back to the nearest card after
-     scrollTo has set a position — which broke the arrows on any device
-     where the drift is off, reduced motion being the common one. */
-  scroll-snap-type: x proximity;
-  /* Snap and a continuous drift cannot both have the scroll position:
-     mandatory snap drags the track back to the nearest card on every
-     frame, which reads as a stutter. Snap returns the moment the
-     drift stops, so a swipe or an arrow still lands on a card. */
-  scroll-behavior: auto;
-  /* Smooth stepping is set per call in JS so it can be dropped under
-     prefers-reduced-motion; declaring it here would override that. */
-  scrollbar-width: none;
-}
-
-.grid[data-drifting] {
-  scroll-snap-type: none;
-}
-
-.grid::-webkit-scrollbar {
-  display: none;
-}
-
-.grid:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 4px;
-  border-radius: var(--radius-sm);
+  border-block-start: 1px solid var(--color-border);
 }
 
 .item {
-  /* Notch geometry, derived rather than guessed: the cut-out is the
-     button plus a gap on its two inner edges, so changing the button
-     size moves the notch with it. --btn-h matches what the shared
-     button tokens produce: 10px padding + 24px line + 1px border,
-     doubled. */
-  --notch-gap: 0.75rem;
-  --btn-w: 9.5rem;
-  --btn-h: 2.875rem;
-  --notch-w: calc(var(--btn-w) + var(--notch-gap));
-  --notch-h: calc(var(--btn-h) + var(--notch-gap));
-  /* Fillet on the inside corner of the cut. */
-  --notch-r: 0.85rem;
-
-  /* Chained drop-shadows compound, so these are weaker than the old
-     1px border was — four passes at this alpha land close to the
-     --color-border it replaces. */
-  --card-edge: rgb(11 14 20 / 0.05);
-  --card-edge-hover: color-mix(in srgb, var(--color-brand) 22%, transparent);
-
-  position: relative;
-  display: flex;
-  flex: 0 0
-    calc(
-      (100% - (var(--per-view) - 1) * var(--card-gap)) / var(--per-view)
-    );
-  scroll-snap-align: start;
-  /* The lift lives here, not on .card, so the button rises with it —
-     it is a sibling now. transform, not translate, so it composes
-     with the translate that data-reveal animates.
-
-     The reveal's properties are restated for the same reason as the
-     About Us CTA: this element carries data-reveal, and a `transition`
-     shorthand here would otherwise drop them and make the cards snap
-     in rather than fade up. */
-  transition:
-    opacity var(--reveal-duration) var(--ease-reveal),
-    translate var(--reveal-duration) var(--ease-reveal),
-    transform var(--transition-base);
-  /* The shorthand above resets transition-delay to 0, which would
-     drop the per-element --reveal-delay and collapse the stagger.
-     Restated after it, deliberately. */
-  transition-delay: var(--reveal-delay, 0ms);
+  border-block-end: 1px solid var(--color-border);
 }
 
-/* The lift moves the CARD, not the .item that owns the hover. Lifting
-   the hover target itself meant a pointer near the card's lower edge
-   was left outside it the moment it rose — hover dropped, the card
-   fell back, the pointer was inside again, and the two states
-   oscillated. The .item box now stays exactly where it is and only its
-   contents move, so the hit area never shifts under the cursor.
-
-   `translate` rather than `transform`: .item carries data-reveal,
-   which animates transform, and setting it here at equal specificity
-   would cancel the reveal's own arrival. */
-.item:hover .card {
-  translate: 0 -4px;
-}
-
-/* --- Carousel controls ------------------------------------------- */
-
-/* Below the cards, trailing-aligned. Only rendered when the track
-   actually overflows. */
-.controls {
-  display: flex;
-  flex-wrap: wrap;
+/* Number, icon, name, description, arrow — five tracks on one line.
+   The description takes whatever is left, so it is the column that
+   gives when the row gets narrow. */
+.row {
+  display: grid;
+  grid-template-columns: 3.5rem 2.75rem minmax(12rem, 18rem) minmax(0, 1fr) 2.75rem;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
-  margin-top: var(--space-5);
-}
-
-/* Position readout. The arrows say whether you can move; this says
-   where you are and how much is left — the row's own scrollbar,
-   borrowed from the convention people already read without being
-   taught it. Echoes the header's reading-progress bar. */
-.progress {
-  position: relative;
-  width: min(9rem, 28vw);
-  height: 2px;
-  overflow: hidden;
-  background-color: var(--color-border);
-  border-radius: 999px;
-}
-
-.progressThumb {
-  position: absolute;
-  inset-block: 0;
-  /* Never shrink to an invisible sliver on a long row. */
-  width: max(var(--thumb-size, 100%), 12%);
-  left: var(--thumb-offset, 0%);
-  background-color: var(--color-brand);
-  border-radius: inherit;
-  transition: left var(--transition-base), width var(--transition-base);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .progressThumb {
-    transition: none;
-  }
-}
-
-/* Filled orange pills, matching the Enquire button on the cards. These
-   were hairline outlines that inverted on hover; on the dark section
-   that left the row's only controls as two faint outlines under a
-   band of orange-accented cards.
-
-   Same orange as the cards, and for the same reason: white ink. The
-   token is named --color-brand-on-light, but the name is about the
-   PAIRING, not the surface it sits on — it is the deep orange that
-   carries white text at 5.2:1, where white on the bright
-   dark-surface orange is 2.0:1 and fails.
-
-   The chevron still nudges outward on hover, which is the hero CTA's
-   own affordance. */
-.arrow {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-  min-height: var(--btn-h, 2.875rem);
-  padding: var(--btn-pad-y) var(--btn-pad-x);
-  /* The button type tokens, same as Read more and the Contact submit.
-     These ran 12px uppercase on wide tracking, which belonged to the
-     hairline micro-control they used to be — beside a row of 16px
-     sentence-case buttons it read as a different face rather than a
-     smaller one. A <button> does not inherit the page family on its
-     own, which is what font-family: inherit is for. */
-  font-family: inherit;
-  font-size: var(--btn-font-size);
-  line-height: var(--btn-line-height);
-  font-weight: var(--btn-font-weight);
-  color: #ffffff;
-  background-color: var(--color-brand-fill);
-  border: 1.5px solid var(--color-brand-fill);
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition:
-    color var(--transition-base),
-    background-color var(--transition-base),
-    border-color var(--transition-base),
-    opacity var(--transition-base);
-}
-
-.arrow:hover:not(:disabled) {
-  background-color: var(--color-brand-fill-hover);
-  border-color: var(--color-brand-fill-edge);
-}
-
-.arrow:active:not(:disabled) {
-  background-color: var(--color-brand-fill-active);
-}
-
-/* The pills carry their own fill now, so a focus ring needs to sit
-   clear of it rather than rely on the border changing. */
-.arrow:focus-visible {
-  outline: 2px solid var(--color-fg);
-  outline-offset: 2px;
-}
-
-.arrow:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.arrowLabel {
-  line-height: var(--btn-line-height);
-}
-
-.arrowIcon {
-  flex-shrink: 0;
-  width: 0.5rem;
-  height: 0.85rem;
-  transition: transform var(--transition-base);
-}
-
-/* Outward, in the direction each control travels. */
-.arrow:hover:not(:disabled):first-child .arrowIcon {
-  transform: translateX(-3px);
-}
-
-.arrow:hover:not(:disabled):last-child .arrowIcon {
-  transform: translateX(3px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .arrowIcon {
-    transition: none;
-  }
-
-  .arrow:hover:not(:disabled) .arrowIcon {
-    transform: none;
-  }
-}
-
-/* Two mask layers composited with `exclude`: the whole card, minus a
-   rectangle at the bottom-right. That rectangle is the notch.
-
-   drop-shadow rather than box-shadow, and no border: a mask clips
-   everything the element paints, so a box-shadow would be cut off at
-   the notch and a border would stop dead where the cut begins,
-   leaving that edge unoutlined. A filter applies AFTER the mask, so
-   the shadow follows the notched silhouette instead. */
-.card {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  /* A floor, not a fixed height: cards still grow for longer copy and
-     all four match, because the row stretches them to the tallest.
-     Without it a short caption leaves the card barely deeper than its
-     photo. */
-  min-height: 26rem;
-  /* Clears the notch strip so the copy cannot run into it. */
-  padding-block-end: var(--notch-h);
-  overflow: hidden;
-  /* The card stays white on the dark section, so it carries the ink
-     tokens the section used to: everything inside — title, body, the
-     muted caption, the Enquire button's orange — resolves against white
-     rather than against the page. */
-  --color-fg: var(--color-fg-on-light);
-  --color-fg-muted: var(--color-fg-muted-on-light);
-  --color-border: var(--color-border-on-light);
-  --color-accent: var(--color-accent-on-light);
-  --color-brand: var(--color-brand-on-light);
-
+  gap: var(--space-5);
+  padding: var(--space-6) var(--space-4);
   color: var(--color-fg);
-  background-color: var(--color-bg-light);
-  border-radius: var(--radius-lg);
-  /* The outline, rebuilt as filters. A real `border` is impossible
-     here — the mask cuts it, so it would stop dead at the notch and
-     leave that edge bare. Four offset drop-shadows in the silhouette
-     colour paint a 1px edge on every side INCLUDING the cut and the
-     rounded corners, because a filter runs after the mask and sees
-     the final shape. The card shadow is chained on the end. */
-  filter:
-    drop-shadow(1px 0 0 var(--card-edge))
-    drop-shadow(-1px 0 0 var(--card-edge))
-    drop-shadow(0 1px 0 var(--card-edge))
-    drop-shadow(0 -1px 0 var(--card-edge))
-    drop-shadow(var(--shadow-card-drop));
-  transition:
-    filter var(--transition-base),
-    translate var(--transition-base);
-
-  /* Three layers, composited bottom-up: the full card, minus the
-     notch rectangle, plus a fillet patch that softens the inside
-     corner. Without the third layer that corner is a hard 90 degrees,
-     which is the one place the cut reads as a mistake rather than a
-     shape.
-
-     The patch is a --notch-r square sitting on the notch's inner
-     corner. Its radial-gradient is transparent inside the arc and
-     opaque outside it, so `add` restores exactly the curved sliver
-     between the square corner and the curve. */
-  mask-image:
-    /* 1+2: the two corners where the cut meets the card's own edges.
-       Convex, so these SUBTRACT the sliver outside the arc. */
-    radial-gradient(
-      circle at top left,
-      transparent calc(var(--notch-r) - 0.5px),
-      #000 var(--notch-r)
-    ),
-    radial-gradient(
-      circle at top left,
-      transparent calc(var(--notch-r) - 0.5px),
-      #000 var(--notch-r)
-    ),
-    /* 3: the inside corner. Concave, so this ADDS the sliver back. */
-    radial-gradient(
-      circle at bottom right,
-      transparent calc(var(--notch-r) - 0.5px),
-      #000 var(--notch-r)
-    ),
-    /* 4: the notch. 5: the card. */
-    linear-gradient(#000 0 0),
-    linear-gradient(#000 0 0);
-  mask-size:
-    var(--notch-r) var(--notch-r),
-    var(--notch-r) var(--notch-r),
-    var(--notch-r) var(--notch-r),
-    var(--notch-w) var(--notch-h),
-    100% 100%;
-  mask-position:
-    right 0 bottom var(--notch-h),
-    right var(--notch-w) bottom 0,
-    right calc(var(--notch-w) - var(--notch-r)) bottom
-      calc(var(--notch-h) - var(--notch-r)),
-    100% 100%,
-    0 0;
-  mask-repeat: no-repeat;
-  /* XOR throughout, not `subtract`. Per the Masking spec `subtract`
-     is "source OUT destination" — it keeps the patch where the card
-     is absent, which erased the card entirely on the first attempt.
-     Every patch here sits inside existing material or inside the
-     notch, and none of them overlap, so a plain toggle does the right
-     thing in both directions: slivers that are material get removed,
-     the fillet that is notch gets restored. */
-  mask-composite: exclude;
-}
-
-.item:hover .card {
-  --card-edge: var(--card-edge-hover);
-
-  filter:
-    drop-shadow(1px 0 0 var(--card-edge))
-    drop-shadow(-1px 0 0 var(--card-edge))
-    drop-shadow(0 1px 0 var(--card-edge))
-    drop-shadow(0 -1px 0 var(--card-edge))
-    drop-shadow(var(--shadow-card-drop-hover));
-}
-
-/* --- Banner: photo with the header on it ------------------------ */
-
-/* The same flip the navbar uses: a dark scrim with white labels at
-   rest, going to white-at-90% with dark labels on hover. Declaring
-   the pair as tokens here means the avatar, title and secondary all
-   turn together without each restating a colour. */
-.banner {
-  --banner-scrim: rgb(11 14 20 / 0.62);
-  --banner-fg: #ffffff;
-
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  min-height: var(--card-banner);
-  /* Top corners are already clipped by the card; these curve the
-     edge where the photo meets the card body. overflow:hidden is
-     what makes the radius bite on the absolutely-positioned image
-     and the scrim above it. */
-  overflow: hidden;
-  border-end-start-radius: var(--radius-md);
-  border-end-end-radius: var(--radius-md);
-  /* Shows through while the photo loads, so the banner never
-     flashes the card's white. */
-  background-color: var(--color-media-on-light);
-}
-
-.item:hover .banner {
-  --banner-scrim: var(--nav-active-bg);
-  --banner-fg: var(--nav-active-fg);
-}
-
-/* Sits above the image, below the header. */
-.banner::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: var(--banner-scrim);
   transition: background-color var(--transition-base);
 }
 
-.image {
-  object-fit: cover;
+.row:hover,
+.row:focus-visible {
+  color: var(--color-fg);
+  background-color: rgb(255 255 255 / 0.04);
 }
 
-.head {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  width: 100%;
-  padding: var(--space-5);
-  color: var(--banner-fg);
-  transition: color var(--transition-base);
-}
-
-.avatar {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: var(--card-avatar);
-  height: var(--card-avatar);
-  color: var(--banner-fg);
-  background-color: color-mix(in srgb, var(--banner-fg) 18%, transparent);
-  border-radius: var(--radius-pill);
-  transition:
-    color var(--transition-base),
-    background-color var(--transition-base);
-}
-
-.avatarIcon {
-  width: var(--card-avatar-icon);
-  height: var(--card-avatar-icon);
-}
-
-/* Flex children floor at their content width; without this a long
-   title pushes the header wider than the card. */
-.headText {
-  min-width: 0;
-}
-
-.cardTitle {
-  margin: 0;
+.number {
   font-size: var(--text-lg);
-  line-height: var(--leading-heading);
-  font-weight: var(--weight-subheading);
-}
-
-.secondary {
-  margin: var(--space-1) 0 0;
-  font-size: var(--text-label);
-  line-height: var(--leading-body);
-  font-weight: var(--weight-body);
-  color: color-mix(in srgb, var(--banner-fg) 72%, transparent);
+  font-weight: var(--weight-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-fg-muted);
   transition: color var(--transition-base);
 }
 
-/* --- Supporting text --------------------------------------------- */
+.row:hover .number,
+.row:focus-visible .number {
+  color: var(--color-brand);
+}
 
-.supporting {
-  margin: 0;
-  padding: var(--space-5) var(--space-5) 0;
-  font-size: var(--text-body);
-  line-height: var(--leading-body);
+.icon {
+  display: flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--color-accent);
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.heading {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.title {
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-subheading);
+  letter-spacing: var(--tracking-display);
+}
+
+.tag {
+  font-size: var(--text-caption);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.body {
+  max-width: 38rem;
+  font-size: var(--text-md);
+  line-height: var(--leading-prose);
   font-weight: var(--weight-body);
   color: var(--color-fg-muted);
 }
 
-/* --- Actions ----------------------------------------------------- */
-
-/* Bootstrap's .btn-primary: solid fill, white label, 6px radius,
-   16px/1.5, and a ~10% darker shade on hover. Two departures from
-   the literal thing: the fill is our accent rather than Bootstrap's
-   #0d6efd, so no fifth blue enters the palette, and the label runs
-   bold rather than Bootstrap's 400 — matching the Contact form's
-   submit, which is the only other primary button on the site. */
-/* Pinned into the notch, sized from the same variables the cut-out is
-   built from so the two cannot drift apart. */
-.action {
-  position: absolute;
-  inset-block-end: 0;
-  inset-inline-end: 0;
-  display: inline-flex;
+/* The arrow in a ring. It fills with the brand colour on hover, which
+   is the row's one moving part. */
+.go {
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--btn-w);
-  padding-block: var(--btn-pad-y);
-  padding-inline: var(--btn-pad-x);
-  font-size: var(--btn-font-size);
-  line-height: var(--btn-line-height);
-  font-weight: var(--btn-font-weight);
-  text-align: center;
-  /* White on --color-brand-on-light is 5.2:1 — the light-surface orange
-     is dark enough to carry white text. */
-  color: #ffffff;
-  background-color: var(--color-brand-fill);
-  border: var(--btn-border-width) solid var(--color-brand-fill);
-  border-radius: var(--radius-btn);
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
   transition:
     background-color var(--transition-base),
-    border-color var(--transition-base);
+    border-color var(--transition-base),
+    color var(--transition-base);
 }
 
-.action:hover {
-  background-color: var(--color-brand-fill-hover);
-  border-color: var(--color-brand-fill-edge);
+.go svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: translate var(--transition-base);
 }
 
-.action:active {
-  background-color: var(--color-brand-fill-active);
+/* Dark ink on the bright orange: white on it fails contrast. */
+.row:hover .go,
+.row:focus-visible .go {
+  color: var(--color-bg);
+  border-color: var(--color-brand);
+  background-color: var(--color-brand);
+}
+
+.row:hover .go svg,
+.row:focus-visible .go svg {
+  translate: 2px -2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card {
+  .go svg {
     transition: none;
   }
 
-  /* Was .card:hover { transform: none }, which matched nothing — the
-     lift lived on .item, and lives on .card's translate now. */
-  .item:hover .card {
+  .row:hover .go svg,
+  .row:focus-visible .go svg {
     translate: none;
   }
 }
 
-/* --- Scroll animation -------------------------------------------- */
+/* --- Narrow viewports --------------------------------------------- */
 
-/* --- Cascade ------------------------------------------------------ */
-
-/* One source of truth for the stagger. Each card declares how far
-   along its entrance sits and everything inside it inherits that
-   value — the custom property cascades where a bare animation-range
-   would have to be restated on every element. Add a fifth service
-   and it needs one line here, not three.
-
-   Walking each start point along is what makes the row cascade
-   left to right instead of all four firing at once. */
-/* --- Scroll animation --------------------------------------------- */
-
-/* Photo drifts against the scroll. Scaled up first so the edges
-   stay covered through the travel. */
-@keyframes banner-drift {
-  from {
-    transform: scale(1.14) translateY(-2.5%);
-  }
-
-  to {
-    transform: scale(1.14) translateY(2.5%);
-  }
-}
-
-/* Exposure curve across the same pass: the photo arrives blown out,
-   settles to normal for the time it is actually being read, then
-   lifts again on the way out. Held flat between 22% and 72% so the
-   middle of the card's visit is a plain photograph — the motion is
-   at the edges, where it reads as arrival and departure rather than
-   as a filter running the whole time.
-
-   filter and transform are separate properties, so this composites
-   with banner-drift instead of overwriting it. */
-@keyframes banner-develop {
-  0% {
-    filter: brightness(2.1);
-  }
-
-  22%,
-  72% {
-    filter: brightness(1);
-  }
-
-  100% {
-    filter: brightness(1.5);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .image {
-      /* Deliberately still linear, unlike the card's entrance. These
-         two track the scroll for as long as the card is on screen,
-         and an eased parallax reads as the photo slipping against
-         the wheel rather than as a curve. Easing belongs on the
-         entrance, which is a gesture with a beginning and an end;
-         ambient motion should stay one-to-one with the scroll.
-
-         One timeline and one range serve both names: a shorter list
-         is cycled to match the animation list, so drift and develop
-         share the card's full on-screen pass. */
-      animation:
-        banner-drift linear both,
-        banner-develop linear both;
-      animation-timeline: view();
-      /* Runs the whole time the card is on screen. */
-      animation-range: cover 0% cover 100%;
-    }
-  }
-}
-
-/* Fewer whole cards per view as the row tightens. */
+/* The description drops to its own line under the name. */
 @media (max-width: 64rem) {
-  .grid {
-    --per-view: 3;
+  .row {
+    grid-template-columns: 3rem 2.5rem minmax(0, 1fr) 2.75rem;
+    row-gap: var(--space-3);
+  }
+
+  .body {
+    grid-column: 3 / 4;
+    grid-row: 2;
+  }
+
+  .go {
+    grid-row: 1 / 3;
+    grid-column: 4;
   }
 }
 
-@media (max-width: 48rem) {
-  .grid {
-    --per-view: 2;
-  }
-}
-
-/* The row needed about 466px of the 335px a 375px phone actually has,
-   so Previous and Next spilled off both edges — centred overflow goes
-   equally in both directions — and could not be tapped.
-
-   The labels go and the pills become squares. Their aria-labels
-   already name them, so nothing is lost to a screen reader, and 46px
-   keeps them above the 44px minimum target. */
+/* On a phone the number and icon share the first line with the arrow,
+   and the copy takes the full width beneath. */
 @media (max-width: 40rem) {
-  .arrowLabel {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+  .row {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: var(--space-3);
+    padding: var(--space-5) var(--space-1);
   }
 
-  .arrow {
-    min-width: var(--btn-h, 2.875rem);
-    padding-inline: var(--space-3);
+  .go {
+    grid-row: 1;
+    grid-column: 3;
+    justify-self: end;
   }
 
-  .progress {
-    width: min(6rem, 22vw);
+  .heading,
+  .body {
+    grid-column: 1 / -1;
+    grid-row: auto;
   }
-}
 
-@media (max-width: 34rem) {
-  .grid {
-    --per-view: 1;
+  .title {
+    font-size: var(--text-2xl);
   }
-}
-
-/* --- Drift control ----------------------------------------------- */
-
-/* The pause control the drift requires: WCAG 2.2.2 applies to anything
-   that moves for more than five seconds, and this never stops on its
-   own. Circular rather than a pill, so it reads as a different tier
-   from the Previous/Next arrows it sits between. */
-.playToggle {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: var(--btn-h, 2.875rem);
-  height: var(--btn-h, 2.875rem);
-  color: var(--color-fg-muted);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  background-color: transparent;
-  cursor: pointer;
-  transition:
-    color var(--transition-base),
-    border-color var(--transition-base);
-}
-
-.playToggle svg {
-  width: 0.75rem;
-  height: 0.75rem;
-}
-
-.playToggle:hover {
-  color: var(--color-fg);
-  border-color: var(--color-border-strong);
-}
-
-.playToggle:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
 }

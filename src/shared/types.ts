@@ -33,10 +33,8 @@ export type Service = {
   /** Key into the icon map in serviceIcons.tsx. */
   icon: "mobile" | "web" | "backend" | "design" | "support";
   href: string;
-  /** Overlaid on the card's media area. */
+  /** The short label under the name, also used on the contact form's chips. */
   tag: string;
-  /** Path under /public. Rendered decorative — see Services.tsx. */
-  image: string;
 };
 
 /* One part of a product — for Yenda, one of its four apps. */
@@ -164,8 +162,6 @@ export type Content = {
     messageQuestion: string;
     send: string;
     sending: string;
-    previous: string;
-    next: string;
     play: string;
     pause: string;
     allRightsReserved: string;

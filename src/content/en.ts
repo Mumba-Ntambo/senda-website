@@ -251,8 +251,6 @@ export const en: Content = {
     messageQuestion: "What do you want to build?",
     send: "Send message",
     sending: "Sending…",
-    previous: "Previous",
-    next: "Next",
     play: "Play",
     pause: "Pause",
     allRightsReserved: "All rights reserved.",

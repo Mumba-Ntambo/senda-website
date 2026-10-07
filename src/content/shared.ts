@@ -20,11 +20,11 @@ export const brand = {
    arrays in en.ts line up with these by index. */
 
 export const serviceMeta = [
-  { icon: "mobile", href: "#contact", image: "/art/mobile.svg" },
-  { icon: "web", href: "#contact", image: "/art/web.svg" },
-  { icon: "backend", href: "#contact", image: "/art/backend.svg" },
-  { icon: "design", href: "#contact", image: "/art/design.svg" },
-  { icon: "support", href: "#contact", image: "/art/run.svg" },
+  { icon: "mobile", href: "#contact" },
+  { icon: "web", href: "#contact" },
+  { icon: "backend", href: "#contact" },
+  { icon: "design", href: "#contact" },
+  { icon: "support", href: "#contact" },
 ] as const;
 
 export const reasonMeta = [

@@ -1,16 +1,17 @@
 import type { CSSProperties } from "react";
 
-import Image from "next/image";
-
 import { Backdrop } from "@/components/Backdrop";
-import { ServicesCarousel } from "@/components/ServicesCarousel";
 import { serviceIcons } from "@/shared/serviceIcons";
 import { content } from "@/shared/content";
 import { SectionHeading } from "@/shared/SectionHeading";
 import styles from "@/styles/Services.module.css";
 
+/* A numbered index rather than a row of cards: one ruled line per
+   service, read top to bottom. Each row is a single link to the
+   contact form, so the whole line is the target, not a button tucked
+   in a corner. */
 export async function Services() {
-  const { site, services, ui } = await content();
+  const { site, services } = await content();
 
   return (
     <section
@@ -30,69 +31,59 @@ export async function Services() {
           id="services-title"
         />
 
-        {/* Even row of cards — no spans. Each follows the Material
-            anatomy: avatar + title + secondary, media, supporting
-            text, actions. */}
-        <ServicesCarousel label={site.servicesEyebrow} ui={ui}>
+        <ol className={styles.list}>
           {services.map((service, index) => (
             <li
               className={styles.item}
               data-reveal=""
-              style={{ "--reveal-delay": `${index * 110}ms` } as CSSProperties}
+              style={{ "--reveal-delay": `${index * 90}ms` } as CSSProperties}
               key={service.title}
             >
-              <article className={styles.card}>
-                {/* The photo runs behind the header rather than
-                    sitting in a band beneath it. alt="" on purpose:
-                    it illustrates a service the title and supporting
-                    text already name, so describing it again would
-                    only add a redundant announcement. */}
-                <div className={styles.banner}>
-                  <Image
-                    className={styles.image}
-                    src={service.image}
-                    alt=""
-                    fill
-                    sizes="(max-width: 48rem) 100vw, (max-width: 64rem) 50vw, 25vw"
-                  />
+              <a className={styles.row} href={service.href}>
+                <span className={styles.number} aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
 
-                  <header className={styles.head}>
-                    <span className={styles.avatar} aria-hidden="true">
-                      <svg
-                        className={styles.avatarIcon}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        {serviceIcons[service.icon]}
-                      </svg>
-                    </span>
+                <span className={styles.icon} aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    {serviceIcons[service.icon]}
+                  </svg>
+                </span>
 
-                    <div className={styles.headText}>
-                      <h3 className={styles.cardTitle}>{service.title}</h3>
-                      <p className={styles.secondary}>{service.tag}</p>
-                    </div>
-                  </header>
-                </div>
+                <span className={styles.heading}>
+                  <span className={styles.title}>{service.title}</span>
+                  <span className={styles.tag}>{service.tag}</span>
+                </span>
 
-                <p className={styles.supporting}>{service.body}</p>
+                <span className={styles.body}>{service.body}</span>
 
-              </article>
-
-              {/* Outside the card, not inside it: the card is masked to
-                  cut the notch, and a mask applies to descendants too —
-                  a button within it would be cut away along with the
-                  corner. It sits in the notch as a sibling instead. */}
-              <a className={styles.action} href={service.href}>
-                {site.servicesCardCta}
-                <span className="visually-hidden">: {service.title}</span>
+                <span className={styles.go}>
+                  <span className="visually-hidden">
+                    {site.servicesCardCta}: {service.title}
+                  </span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M7 17 17 7M9 7h8v8" />
+                  </svg>
+                </span>
               </a>
             </li>
           ))}
-        </ServicesCarousel>
+        </ol>
       </div>
     </section>
   );
