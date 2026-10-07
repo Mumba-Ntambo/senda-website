@@ -56,6 +56,7 @@ export const productMeta = [
   {
     slug: "yenda",
     ctaHref: "/#contact",
+    siteHref: "https://yenda.site",
     partIcons: ["dashboard", "crew", "customer", "admin"],
   },
 ] as const;

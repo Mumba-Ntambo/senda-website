@@ -59,6 +59,9 @@ export type Product = {
   parts: ProductPart[];
   ctaLabel: string;
   ctaHref: string;
+  /** The product's own website. */
+  siteLabel: string;
+  siteHref: string;
 };
 
 /* One line of the "what to tell us" list beside the contact form.

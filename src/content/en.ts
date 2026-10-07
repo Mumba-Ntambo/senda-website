@@ -96,6 +96,7 @@ const products = [
       },
     ],
     ctaLabel: "Ask about Yenda",
+    siteLabel: "Visit yenda.site",
   },
 ];
 

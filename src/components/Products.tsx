@@ -46,9 +46,34 @@ export async function Products() {
                 <p className={styles.tagline}>{product.tagline}</p>
                 <p className={styles.summary}>{product.summary}</p>
 
-                <a className={styles.cta} href={product.ctaHref}>
-                  {product.ctaLabel}
-                </a>
+                <div className={styles.actions}>
+                  <a className={styles.cta} href={product.ctaHref}>
+                    {product.ctaLabel}
+                  </a>
+
+                  {/* The product's own site, so it opens beside this
+                      one rather than replacing it. */}
+                  <a
+                    className={styles.site}
+                    href={product.siteHref}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {product.siteLabel}
+                    <svg
+                      className={styles.siteIcon}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M7 17 17 7M9 7h8v8" />
+                    </svg>
+                  </a>
+                </div>
               </div>
 
               <ul className={styles.highlights} data-reveal="right">
