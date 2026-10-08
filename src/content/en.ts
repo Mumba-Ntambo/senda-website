@@ -114,7 +114,7 @@ const navLabels = [
   { label: "Products", children: products.map((product) => product.name) },
   {
     label: "About",
-    children: ["Who we are", "How we work", "Team"],
+    children: ["Who we are", "How we work", "Team", "Careers"],
   },
   { label: "Why Senda", children: reasons.map((reason) => reason.title) },
   { label: "Contact Us", children: [] },
@@ -172,6 +172,22 @@ export const en: Content = {
     teamProfileLabel: "Read profile",
     teamInterestsTitle: "Interests",
     teamCtaLabel: "Talk to us",
+
+    careersEyebrow: "Careers",
+    careersTitle: "Come and build ",
+    careersTitleEmphasis: "with us.",
+    careersSubhead:
+      "Senda Technologies designs, builds and runs software from Lusaka, Zambia.",
+    careersWorkTitle: "The work",
+    careersWorkBody:
+      "We take products from the first sketch to production and keep them running afterwards. We care about the whole product, not just the code: how it looks, how it behaves on a slow connection, and whether it is still easy to change a year from now.",
+    careersAreasTitle: "Where you could fit",
+    careersOpeningsTitle: "Open roles",
+    careersOpeningsEmpty: "There are no open roles listed right now.",
+    careersApplyTitle: "Send us your CV",
+    careersApplyBody:
+      "We are glad to hear from people who want to do this kind of work, whether or not a role is listed. Send your CV and a short note about something you have built.",
+    careersApplyLabel: "Email your CV",
 
     footerTagline: "Software, end to end, from Lusaka.",
   },
@@ -256,6 +272,46 @@ export const en: Content = {
     { value: "Lusaka", label: "Based in Zambia" },
   ],
 
+  apply: {
+    title: "Upload your CV",
+    intro: "Attach your CV here, then fill in the rest below.",
+    name: "Full name",
+    email: "Email",
+    phone: "Phone",
+    location: "Where you are based",
+    link: "LinkedIn or portfolio",
+    linkHint: "A link to your profile, portfolio or code.",
+    cv: "CV",
+    cvHint: "PDF or Word, up to 5 MB.",
+    note: "Why this role?",
+    noteHint: "A few lines on what draws you to it and what you would bring.",
+    submit: "Send application",
+    sending: "Sending…",
+    sentTitle: "Application sent",
+    sentBody:
+      "Thank you. We have your application and will be in touch by email.",
+    failed:
+      "Your application could not be sent. Please try again in a moment.",
+    missing: "Please fill this in.",
+    badEmail: "That does not look like an email address.",
+    badFile: "Attach your CV as a PDF or Word file of 5 MB or less.",
+    privacy:
+      "We use what you send only to consider you for this role.",
+    backToRoles: "All open roles",
+    overviewTab: "Overview",
+    applicationTab: "Application",
+    applyNow: "Apply for this role",
+    placeholder: "Type here…",
+    uploadFile: "Upload file",
+    changeFile: "Change file",
+    factLocation: "Location",
+    factType: "Employment type",
+    factWorkMode: "Location type",
+    factArea: "Team",
+    factCompensation: "Compensation",
+    factCloses: "Closing date",
+  },
+
   /* None of these pages exist yet, so nothing is listed. */
   footerLinks: [],
 
@@ -278,5 +334,18 @@ export const en: Content = {
     pause: "Pause",
     allRightsReserved: "All rights reserved.",
     openMenuLabel: "Menu",
+    searchRoles: "Search roles",
+    searchRolesPlaceholder: "Search by title or keyword",
+    filterType: "Type",
+    filterLocation: "Location",
+    filterArea: "Area",
+    filterAll: "All",
+    clearFilters: "Clear filters",
+    noMatchingRoles: "No roles match that search.",
+    /* {shown} and {total} are replaced with the counts. */
+    rolesShown: "Showing {shown} of {total} roles",
+    applyForRole: "View and apply",
+    /* {date} is replaced with the closing date. */
+    roleCloses: "Closes {date}",
   },
 };

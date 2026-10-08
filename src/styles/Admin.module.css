@@ -1,0 +1,507 @@
+/* The dashboard: the site's dark bar across the top, then a light
+   working surface. Light because this is a place for reading lists
+   and filling in forms, not a page to be looked at. */
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+
+  --color-fg: var(--color-fg-on-light);
+  --color-fg-muted: var(--color-fg-muted-on-light);
+  --color-border: var(--color-border-on-light);
+  --color-accent: var(--color-accent-on-light);
+  --color-brand: var(--color-brand-on-light);
+  --color-danger: var(--color-danger-on-light);
+
+  color: var(--color-fg);
+  background-color: var(--color-surface-on-light);
+}
+
+/* --- Top bar ------------------------------------------------------ */
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--gutter-page);
+  color: #ffffff;
+  background-color: var(--color-header-solid);
+}
+
+.brand {
+  color: inherit;
+}
+
+.badge {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  border: 1px solid rgb(255 255 255 / 0.3);
+  border-radius: var(--radius-pill);
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-inline-start: auto;
+  min-width: 0;
+}
+
+.email {
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(255 255 255 / 0.75);
+}
+
+/* On the dark bar the outline button needs light ink. */
+.bar .ghost {
+  color: #ffffff;
+  border-color: rgb(255 255 255 / 0.3);
+}
+
+.bar .ghost:hover {
+  border-color: #ffffff;
+}
+
+/* --- Tabs --------------------------------------------------------- */
+
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+  padding-inline: var(--gutter-page);
+  overflow-x: auto;
+  border-block-end: 1px solid var(--color-border);
+  background-color: var(--color-bg-light);
+}
+
+.tab {
+  flex: 0 0 auto;
+  padding: var(--space-4) var(--space-3);
+  font-family: inherit;
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  color: var(--color-fg-muted);
+  border: 0;
+  border-block-end: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--color-fg);
+}
+
+.tab[aria-current="page"] {
+  color: var(--color-fg);
+  border-block-end-color: var(--color-brand);
+}
+
+/* --- Layout ------------------------------------------------------- */
+
+.main {
+  width: 100%;
+  max-width: 60rem;
+  margin-inline: auto;
+  padding: var(--space-6) var(--gutter-page) var(--space-8);
+}
+
+.center {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6) var(--gutter-page);
+}
+
+.card,
+.form,
+.item {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-light);
+}
+
+.card {
+  display: grid;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 24rem;
+  padding: var(--space-6);
+}
+
+.cardTitle,
+.title {
+  margin: 0;
+  font-size: var(--text-3xl);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-block-end: var(--space-4);
+}
+
+.note {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-fg-muted);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--color-danger);
+}
+
+.error:empty {
+  display: none;
+}
+
+/* --- Buttons ------------------------------------------------------ */
+
+.primary,
+.ghost,
+.danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: var(--space-2) var(--space-4);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--btn-font-weight);
+  line-height: var(--leading-flat);
+  border: 1px solid transparent;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.primary {
+  color: #ffffff;
+  background-color: var(--color-brand-fill);
+  border-color: var(--color-brand-fill);
+}
+
+.primary:hover {
+  background-color: var(--color-brand-fill-hover);
+}
+
+.primary:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.ghost {
+  color: var(--color-fg);
+  border-color: var(--color-border);
+  background-color: transparent;
+}
+
+.ghost:hover {
+  border-color: color-mix(in srgb, var(--color-fg) 40%, transparent);
+}
+
+.danger {
+  color: #ffffff;
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.page :is(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* --- Forms -------------------------------------------------------- */
+
+.form {
+  display: grid;
+  gap: var(--space-4);
+  margin-block-end: var(--space-6);
+  padding: var(--space-5);
+}
+
+.formTitle {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-subheading);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.field {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-3);
+  /* Form controls do not inherit the page face on their own. */
+  font-family: inherit;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-on-light);
+}
+
+textarea.input {
+  resize: vertical;
+}
+
+.hint {
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--color-fg-muted);
+}
+
+.filter {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 24rem;
+  margin-block-end: var(--space-4);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-body);
+}
+
+.check input {
+  width: 1.125rem;
+  height: 1.125rem;
+  accent-color: var(--color-brand-fill);
+}
+
+/* --- Filters ------------------------------------------------------ */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block-end: var(--space-4);
+}
+
+.chip {
+  padding: var(--space-2) var(--space-4);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-bg-light);
+  cursor: pointer;
+}
+
+.chip[aria-pressed="true"] {
+  color: #ffffff;
+  background-color: var(--color-brand-fill);
+  border-color: var(--color-brand-fill);
+}
+
+/* --- Lists -------------------------------------------------------- */
+
+.list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  padding: var(--space-5);
+}
+
+/* An unread enquiry carries the brand edge, so the new ones can be
+   found without reading a single label. */
+.item[data-status="new"] {
+  border-inline-start: 3px solid var(--color-brand);
+}
+
+.item[data-status="done"],
+.item[data-status="rejected"] {
+  opacity: 0.7;
+}
+
+.itemHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.who {
+  min-width: 0;
+}
+
+.itemTitle {
+  margin: 0;
+  font-size: var(--text-lg);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-subheading);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-fg-muted);
+  overflow-wrap: anywhere;
+}
+
+.meta a {
+  color: var(--color-accent);
+}
+
+.when {
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+  color: var(--color-fg-muted);
+  white-space: nowrap;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+}
+
+.tag {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-on-light);
+}
+
+/* The sender's own line breaks are kept: a message is often a list. */
+.message {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-start: var(--space-4);
+}
+
+.segmented {
+  display: inline-flex;
+  margin-inline-end: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  overflow: hidden;
+}
+
+.segment {
+  min-height: 2.5rem;
+  padding: var(--space-2) var(--space-4);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-fg-muted);
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.segment + .segment {
+  border-inline-start: 1px solid var(--color-border);
+}
+
+.segment[aria-pressed="true"] {
+  color: #ffffff;
+  background-color: var(--color-lead-card);
+}
+
+.confirm {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.state {
+  flex-shrink: 0;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-on-light);
+}
+
+.state[data-state="live"] {
+  color: #ffffff;
+  background-color: #1f6f5c;
+}
+
+/* --- Phones ------------------------------------------------------- */
+
+@media (max-width: 40rem) {
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .itemHead {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .email {
+    display: none;
+  }
+
+  .segmented {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .segment {
+    flex: 1;
+  }
+}

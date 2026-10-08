@@ -1,0 +1,190 @@
+.wrap {
+  margin-block-start: var(--space-5);
+}
+
+/* --- Search and filters ------------------------------------------- */
+
+.controls {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.search,
+.group {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.input {
+  width: 100%;
+  max-width: 32rem;
+  padding: var(--space-3) var(--space-4);
+  /* Inputs do not inherit the page face on their own. */
+  font-family: inherit;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-on-light);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* The contact form's service chips, as buttons. */
+.chip {
+  padding: var(--space-2) var(--space-4);
+  font-family: inherit;
+  font-size: var(--text-label);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-body);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  cursor: pointer;
+  transition:
+    color var(--transition-base),
+    background-color var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.chip:hover {
+  border-color: color-mix(in srgb, var(--color-fg) 32%, transparent);
+}
+
+.chip[aria-pressed="true"] {
+  color: #ffffff;
+  background-color: var(--color-brand-fill);
+  border-color: var(--color-brand-fill);
+}
+
+.chip:focus-visible,
+.clear:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* --- Count -------------------------------------------------------- */
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 2.75rem;
+  margin-block-start: var(--space-5);
+  padding-block-end: var(--space-3);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.count {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-fg-muted);
+}
+
+.clear {
+  padding: var(--space-1) 0;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--btn-font-weight);
+  color: var(--color-brand);
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.clear:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+/* --- Roles -------------------------------------------------------- */
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.role {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding-block: var(--space-5);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.roleCopy {
+  min-width: 0;
+}
+
+.roleTitle {
+  margin: 0;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-heading);
+}
+
+.roleMeta {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.roleSummary {
+  max-width: var(--measure);
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--color-fg-muted);
+}
+
+.roleCloses {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-fg-muted);
+}
+
+.apply {
+  composes: cta from "./Products.module.css";
+  flex-shrink: 0;
+}
+
+.none {
+  margin: 0;
+  padding-block: var(--space-6);
+  font-size: var(--text-lead);
+  color: var(--color-fg-muted);
+}
+
+@media (max-width: 40rem) {
+  .role {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+}

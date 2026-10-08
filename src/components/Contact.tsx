@@ -72,6 +72,18 @@ export function Contact() {
           <form className={styles.form} action={formAction} noValidate>
             <p className={styles.formTitle}>{site.contactFormTitle}</p>
 
+            {/* A trap for form-filling bots: people never see or reach
+                this field, so anything in it marks the submission as
+                automated. See submitContact. */}
+            <input
+              className="visually-hidden"
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+            />
+
             {/* Who is writing. Name and email share a row — both are
               short and both are about the sender, so pairing them
               stops the panel reading as five identical boxes. */}

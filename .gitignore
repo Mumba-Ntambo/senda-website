@@ -49,3 +49,6 @@ next-env.d.ts
 /image copy*.png
 # stray drag-and-drop leftovers: files holding a pasted path, not content
 Untitled
+
+# The public backend settings are committed on purpose; see the file.
+!.env.production

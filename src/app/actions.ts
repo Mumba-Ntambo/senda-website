@@ -2,6 +2,9 @@
 
 import { brand } from "@/content/shared";
 import type { ContactFields, ContactState } from "@/shared/contact";
+import { serverSupabase, supabaseConfigured } from "@/shared/supabase";
+
+const SENT = "Thank you. Your message has been sent and we will come back to you.";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -25,6 +28,12 @@ export async function submitContact(
     message: read("message"),
   };
 
+  /* The hidden trap field was filled in, so this is a bot. It is told
+     the message was sent, so it has no reason to try another way. */
+  if (String(formData.get("website") ?? "").trim()) {
+    return { status: "sent", message: SENT, fieldErrors: {} };
+  }
+
   const fieldErrors: ContactState["fieldErrors"] = {};
   if (!submission.name) fieldErrors.name = "Tell us your name.";
   if (!submission.email) fieldErrors.email = "We need an address to reply to.";
@@ -39,25 +48,31 @@ export async function submitContact(
   return deliver(submission);
 }
 
-/* Delivery seam — deliberately not implemented.
-   No email provider is provisioned for this project yet, so rather
-   than pretend a submission was sent, this reports the gap. Run
-   `/marketplace` to add a provider, then send `submission` from
-   here and return { status: "sent" }. */
+/* Saved to the enquiries table, where the admin dashboard reads them.
+   The insert runs as an anonymous visitor: row-level security lets
+   anyone add an enquiry and lets no one but an admin read one. */
 async function deliver(submission: ContactFields): Promise<ContactState> {
-  const provider = process.env.CONTACT_PROVIDER;
+  const fallback: ContactState = {
+    status: "unconfigured",
+    message: `Your message could not be sent from this form. Please email ${brand.contactEmail} instead.`,
+    fieldErrors: {},
+  };
 
-  if (!provider) {
-    return {
-      status: "unconfigured",
-      message:
-        `This form is not connected yet, so your message was not sent. Nothing was stored. Please email ${brand.contactEmail} instead.`,
-      fieldErrors: {},
-    };
-  }
+  if (!supabaseConfigured) return fallback;
 
-  throw new Error(
-    `CONTACT_PROVIDER="${provider}" is set, but no delivery is implemented ` +
-      `for it. Fields ready to send: ${Object.keys(submission).join(", ")}.`,
-  );
+  const { error } = await serverSupabase().from("enquiries").insert({
+    name: submission.name.slice(0, 200),
+    email: submission.email.slice(0, 320),
+    company: submission.company.slice(0, 200),
+    services: submission.services.slice(0, 12),
+    message: submission.message.slice(0, 5000),
+  });
+
+  if (error) return fallback;
+
+  return {
+    status: "sent",
+    message: SENT,
+    fieldErrors: {},
+  };
 }

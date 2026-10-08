@@ -79,6 +79,28 @@ export type Person = {
   interests: string[];
 };
 
+/* One open role on the careers page. Roles are posted from the admin
+   dashboard and read from the database — see shared/openings.ts. */
+export type Opening = {
+  id: string;
+  title: string;
+  /** Full-time, contract, internship and so on. */
+  type: string;
+  location: string;
+  summary: string;
+  /** Which service the role works in, when it belongs to one. */
+  area?: string;
+  /** Last day to apply, as YYYY-MM-DD. */
+  closesOn?: string;
+  /** On-site, hybrid or remote. */
+  workMode?: string;
+  /** Free text, e.g. a range and what it includes. */
+  compensation?: string;
+  /** The full advert, shown on the role's own page. Plain text; a
+      blank line starts a new paragraph. */
+  description?: string;
+};
+
 /* One line of the "what to tell us" list beside the contact form.
    `term` names the kind of detail, `detail` says what is useful. */
 export type ContactAsk = {
@@ -161,6 +183,20 @@ export type Content = {
     teamCtaLabel: string;
     teamCtaHref: string;
 
+    careersEyebrow: string;
+    careersTitle: string;
+    careersTitleEmphasis: string;
+    careersSubhead: string;
+    careersWorkTitle: string;
+    careersWorkBody: string;
+    careersAreasTitle: string;
+    careersOpeningsTitle: string;
+    careersOpeningsEmpty: string;
+    careersApplyTitle: string;
+    careersApplyBody: string;
+    careersApplyLabel: string;
+    careersApplyHref: string;
+
     footerTagline: string;
   };
   navLinks: NavLink[];
@@ -173,6 +209,43 @@ export type Content = {
   milestones: Milestone[];
   aboutStats: Stat[];
   footerLinks: NavLink[];
+  /* The application form on a role's page. */
+  apply: {
+    title: string;
+    intro: string;
+    name: string;
+    email: string;
+    phone: string;
+    location: string;
+    link: string;
+    linkHint: string;
+    cv: string;
+    cvHint: string;
+    note: string;
+    noteHint: string;
+    submit: string;
+    sending: string;
+    sentTitle: string;
+    sentBody: string;
+    failed: string;
+    missing: string;
+    badEmail: string;
+    badFile: string;
+    privacy: string;
+    backToRoles: string;
+    overviewTab: string;
+    applicationTab: string;
+    applyNow: string;
+    placeholder: string;
+    uploadFile: string;
+    changeFile: string;
+    factLocation: string;
+    factType: string;
+    factWorkMode: string;
+    factArea: string;
+    factCompensation: string;
+    factCloses: string;
+  };
   /* Labels for the form controls and other chrome that is not part of
      any section's copy. */
   ui: {
@@ -194,5 +267,16 @@ export type Content = {
     pause: string;
     allRightsReserved: string;
     openMenuLabel: string;
+    searchRoles: string;
+    searchRolesPlaceholder: string;
+    filterType: string;
+    filterLocation: string;
+    filterArea: string;
+    filterAll: string;
+    clearFilters: string;
+    noMatchingRoles: string;
+    rolesShown: string;
+    applyForRole: string;
+    roleCloses: string;
   };
 };
