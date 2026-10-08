@@ -2,6 +2,10 @@
    working surface. Light because this is a place for reading lists
    and filling in forms, not a page to be looked at. */
 .page {
+  /* The site as a whole declares a dark scheme, which would draw the
+     browser's own controls — checkboxes, date pickers, selects — dark
+     on this light surface. */
+  color-scheme: light;
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
