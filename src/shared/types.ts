@@ -187,15 +187,8 @@ export type Content = {
     careersTitle: string;
     careersTitleEmphasis: string;
     careersSubhead: string;
-    careersWorkTitle: string;
-    careersWorkBody: string;
-    careersAreasTitle: string;
     careersOpeningsTitle: string;
     careersOpeningsEmpty: string;
-    careersApplyTitle: string;
-    careersApplyBody: string;
-    careersApplyLabel: string;
-    careersApplyHref: string;
 
     footerTagline: string;
   };

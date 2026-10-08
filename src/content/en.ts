@@ -178,16 +178,8 @@ export const en: Content = {
     careersTitleEmphasis: "with us.",
     careersSubhead:
       "Senda Technologies designs, builds and runs software from Lusaka, Zambia.",
-    careersWorkTitle: "The work",
-    careersWorkBody:
-      "We take products from the first sketch to production and keep them running afterwards. We care about the whole product, not just the code: how it looks, how it behaves on a slow connection, and whether it is still easy to change a year from now.",
-    careersAreasTitle: "Where you could fit",
     careersOpeningsTitle: "Open roles",
     careersOpeningsEmpty: "There are no open roles listed right now.",
-    careersApplyTitle: "Send us your CV",
-    careersApplyBody:
-      "We are glad to hear from people who want to do this kind of work, whether or not a role is listed. Send your CV and a short note about something you have built.",
-    careersApplyLabel: "Email your CV",
 
     footerTagline: "Software, end to end, from Lusaka.",
   },

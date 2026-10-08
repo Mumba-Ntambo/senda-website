@@ -15,7 +15,6 @@ export const brand = {
   address: ["Senda Technologies Ltd", "Lusaka, Zambia", "Registered with PACRA"],
   contactEmail,
   contactEmailHref: `mailto:${contactEmail}`,
-  careersApplyHref: `mailto:${contactEmail}?subject=${encodeURIComponent("Careers at Senda Technologies")}`,
 } as const;
 
 /* Structural halves of the repeated blocks. Order matters — the
