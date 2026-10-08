@@ -34,6 +34,19 @@ export function serverSupabase(revalidate?: number): SupabaseClient {
   });
 }
 
+/* For server code acting for a signed-in admin. It carries that
+   person's own session, so row-level security decides what it may do
+   exactly as it does in their browser; the server gains no power of its
+   own. */
+export function adminSupabase(accessToken: string): SupabaseClient {
+  if (!url || !key) throw new Error("Supabase is not configured.");
+
+  return createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { Authorization: `Bearer ${accessToken}` } },
+  });
+}
+
 /* For the admin page, in the browser. One instance, so the session it
    keeps in localStorage is shared by everything on the page. */
 let browser: SupabaseClient | undefined;

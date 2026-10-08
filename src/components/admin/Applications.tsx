@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { brand } from "@/content/shared";
+import { sendRejection } from "@/app/admin/actions";
+import { rejectionMessage } from "@/shared/rejection";
 import { browserSupabase } from "@/shared/supabase";
 import styles from "@/styles/Admin.module.css";
 
@@ -20,6 +21,7 @@ type Application = {
   note: string;
   cv_path: string;
   status: Status;
+  rejection_sent_at: string | null;
 };
 
 const STATUSES: { key: Status; label: string }[] = [
@@ -42,20 +44,20 @@ const when = (iso: string) =>
    a stranger, and anything else stays as plain text. */
 const safeLink = (link: string) => /^https?:\/\//i.test(link);
 
-/* A rejection is written by hand, from the admin's own mail app: this
-   only opens it with the standard wording filled in, ready to edit. */
-const rejectionMail = (row: Application) => {
-  const subject = `Your application for ${row.role_title} at ${brand.name}`;
-  const body = [
-    `Dear ${row.name},`,
-    `Thank you for applying for the ${row.role_title} role at ${brand.name}, and for the time you put into your application.`,
-    "We have reviewed it carefully and, on this occasion, we will not be taking it further.",
-    "We will keep your application on file, and we will be in touch if a role that suits your experience opens up.",
-    "We wish you the very best in your search.",
-    `Kind regards,\n${brand.name}`,
-  ].join("\n\n");
+/* The same rejection as a Gmail draft, for the one that needs a
+   personal word before it goes. A mailto: link would open whatever mail
+   app the computer defaults to, which is rarely the admin's inbox. */
+const rejectionDraft = (row: Application) => {
+  const { subject, body } = rejectionMessage(row);
+  const draft = new URLSearchParams({
+    view: "cm",
+    fs: "1",
+    to: row.email,
+    su: subject,
+    body,
+  });
 
-  return `mailto:${row.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return `https://mail.google.com/mail/?${draft}`;
 };
 
 /* Everyone who has applied through a role's page, newest first. */
@@ -65,6 +67,7 @@ export function Applications() {
   const [role, setRole] = useState("all");
   const [status, setFilter] = useState<Status | "all">("all");
   const [confirming, setConfirming] = useState<string | null>(null);
+  const [sending, setSending] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const { data, error } = await browserSupabase()
@@ -95,6 +98,28 @@ export function Applications() {
       setRows((current) =>
         (current ?? []).map((row) =>
           row.id === id ? { ...row, status: next } : row,
+        ),
+      );
+  }
+
+  /* The server sends it, as this admin: it is handed their session so
+     that the database, not the server, decides whether they may. */
+  async function reject(row: Application) {
+    setError("");
+    setSending(row.id);
+
+    const { data } = await browserSupabase().auth.getSession();
+    const result = await sendRejection(
+      row.id,
+      data.session?.access_token ?? "",
+    ).catch(() => ({ ok: false as const, message: "Could not reach the site." }));
+
+    setSending(null);
+    if (!result.ok) setError(result.message);
+    else
+      setRows((current) =>
+        (current ?? []).map((r) =>
+          r.id === row.id ? { ...r, rejection_sent_at: result.sentAt } : r,
         ),
       );
   }
@@ -263,10 +288,29 @@ export function Applications() {
                   Open CV
                 </button>
 
-                {row.status === "rejected" ? (
-                  <a className={styles.ghost} href={rejectionMail(row)}>
-                    Email rejection
-                  </a>
+                {row.rejection_sent_at ? (
+                  <span className={styles.when}>
+                    Rejection emailed {when(row.rejection_sent_at)}
+                  </span>
+                ) : row.status === "rejected" ? (
+                  <>
+                    <button
+                      className={styles.ghost}
+                      type="button"
+                      disabled={sending === row.id}
+                      onClick={() => reject(row)}
+                    >
+                      {sending === row.id ? "Sending…" : "Send rejection email"}
+                    </button>
+                    <a
+                      className={styles.ghost}
+                      href={rejectionDraft(row)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Edit in Gmail
+                    </a>
+                  </>
                 ) : null}
 
                 {confirming === row.id ? (
