@@ -146,7 +146,7 @@
   /* Blue, not the house orange: it stops the card competing with the
      orange CTA directly beneath it. */
   background-color: var(--color-lead-card);
-  box-shadow: 0 1.25rem 2.5rem rgb(11 14 20 / 0.16);
+  box-shadow: 0 1.25rem 2.5rem rgb(18 33 27 / 0.16);
 
   /* Re-point the ink tokens so the card's copy inverts with the fill
      instead of being restated declaration by declaration. */

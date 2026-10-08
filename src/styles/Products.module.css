@@ -33,15 +33,15 @@
   background-image:
     linear-gradient(
       to bottom,
-      rgb(7 11 20 / 0.55) 0%,
-      rgb(7 11 20 / 0.25) 14%,
-      rgb(7 11 20 / 0) 38%
+      rgb(13 25 20 / 0.55) 0%,
+      rgb(13 25 20 / 0.25) 14%,
+      rgb(13 25 20 / 0) 38%
     ),
     linear-gradient(
       to top,
-      rgb(7 11 20 / 0.6) 0%,
-      rgb(7 11 20 / 0.25) 18%,
-      rgb(7 11 20 / 0) 42%
+      rgb(13 25 20 / 0.6) 0%,
+      rgb(13 25 20 / 0.25) 18%,
+      rgb(13 25 20 / 0) 42%
     );
 }
 
@@ -223,7 +223,7 @@
   color: #ffffff;
   border-radius: var(--radius-xl);
   background-color: var(--color-lead-card);
-  box-shadow: 0 1.25rem 2.5rem rgb(11 14 20 / 0.16);
+  box-shadow: 0 1.25rem 2.5rem rgb(18 33 27 / 0.16);
 }
 
 .highlight {

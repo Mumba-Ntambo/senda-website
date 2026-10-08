@@ -50,7 +50,7 @@
    always judged against white, never against the dark scrim. That is
    why it takes the on-light orange rather than --color-brand.
 
-   It also fixes a contrast bug: the previous --nav-accent (#4d9fff)
+   It also fixes a contrast bug: the previous --nav-accent (#3f9469)
    measured 2.72:1 on the flipped rail, under the 3:1 WCAG 1.4.11 asks
    of a meaningful icon. This is 5.2:1. */
 .link:hover,

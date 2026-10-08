@@ -5,19 +5,19 @@
 
 :root {
   /* --- Surface ------------------------------------------------ */
-  --color-bg: #0b0e14;
-  --color-bg-header: #0c0f17;
+  --color-bg: #12211b;
+  --color-bg-header: #12211b;
   /* Navbar scrim. The header overlays the hero, so this alpha is
      what you see the backdrop through — raise it for legibility,
      lower it to show more of it. 0 is fully transparent. */
-  --color-header-scrim: rgb(12 15 23 / 0.3);
+  --color-header-scrim: rgb(18 33 27 / 0.3);
   /* Heavier than the header's: the rail scrolls across both dark
      and white sections, so it has to read as a solid dark pill
      everywhere rather than tint whatever is behind it. */
-  --color-rail-scrim: rgb(12 15 23 / 0.72);
+  --color-rail-scrim: rgb(18 33 27 / 0.72);
   /* Opaque fill the header fades in behind itself once scrolled, so
      white labels stay legible over the light sections below. */
-  --color-header-solid: #0c0f17;
+  --color-header-solid: #12211b;
   --header-blur: 2px;
 
   /* --- Navbar colour roles -------------------------------------
@@ -32,8 +32,8 @@
   --nav-accent: var(--color-accent);
 
   /* ...and the hovered values */
-  --nav-active-bg: rgb(255 255 255 / 0.9);
-  --nav-active-fg: #0b0e14;
+  --nav-active-bg: rgb(246 245 241 / 0.94);
+  --nav-active-fg: #12211b;
   --nav-active-border: rgb(0 0 0 / 0.3);
   --nav-active-shadow: 0 3px 6px rgb(0 0 0 / 0.16);
 
@@ -52,21 +52,21 @@
   --social-icon-size: 1.375rem; /* 22px */
   --social-icon-sm: 1.5625rem; /* 25px — footer row */
   --radius-rail: 0.9375rem; /* 15px */
-  --color-hero-bg: #070b14;
-  --color-hero-bg-deep: #0d1526;
+  --color-hero-bg: #0d1914;
+  --color-hero-bg-deep: #1c372d;
 
   /* --- Ink ---------------------------------------------------- */
   --color-fg: #ffffff;
   /* Lifted from #9aa7bd: the dark-surface counterpart of darkening
      the muted ink on light, so body copy gains the same legibility on
      both. 8.93:1 on --color-bg. */
-  --color-fg-muted: #b4bfd2;
+  --color-fg-muted: color-mix(in srgb, #f6f5f1 74%, #12211b);
 
   /* --- Accent blue ------------------------------------------ */
-  --color-accent: #4d9fff;
-  --color-accent-bright: #a8cfff;
-  --color-accent-dim: #1d3f70;
-  --color-accent-faint: #12294a;
+  --color-accent: #3f9469;
+  --color-accent-bright: #e3f0ea;
+  --color-accent-dim: #0a5943;
+  --color-accent-faint: #1c372d;
 
   /* --- Brand orange --------------------------------------------
      The second brand colour. It needs a
@@ -81,15 +81,15 @@
      Text on an orange button is NOT interchangeable between surfaces:
      white on --color-brand-on-light is 5.2:1, but white on
      --color-brand is only 2.0:1 and fails. */
-  --color-brand: #ff9f43;
-  --color-brand-bright: #ffd2a6;
-  --color-brand-dim: #7a3d0c;
-  --color-brand-on-light: #c2410c;
+  --color-brand: #3f9469;
+  --color-brand-bright: #e3f0ea;
+  --color-brand-dim: #0a5943;
+  --color-brand-on-light: #0e6b52;
 
   /* The lead card in the Why section: the deep end of the accent
      blue, so it does not compete with the orange call to action
      directly beneath it. White text on it is about 10:1. */
-  --color-lead-card: #1d3f70;
+  --color-lead-card: #1c372d;
 
   /* --- Filled orange buttons --------------------------------------
      One orange for every filled button on the site, on every surface,
@@ -113,24 +113,24 @@
 
   /* Alternating section surface, and the panel colour that cards
      and form fields sit on. */
-  --color-bg-alt: #0e1420;
+  --color-bg-alt: #1c372d;
 
   /* Light section surface. A section opting into this redefines the
      ink tokens on itself, so descendants in other modules
      (SectionHeading, cards) follow without knowing about it —
      the same technique as the navbar hover flip. */
-  --color-bg-light: #ffffff;
-  --color-fg-on-light: #0b0e14;
+  --color-bg-light: #f6f5f1;
+  --color-fg-on-light: #12211b;
   /* Darkened from #566076 (9.4:1). Secondary copy was reading too
      pale beside the near-black headings. 8.79:1 on white. */
-  --color-fg-muted-on-light: #3f4859;
-  --color-surface-on-light: #f3f5f9;
-  --color-border-on-light: rgb(11 14 20 / 0.12);
+  --color-fg-muted-on-light: color-mix(in srgb, #12211b 76%, #f6f5f1);
+  --color-surface-on-light: #ffffff;
+  --color-border-on-light: rgb(18 33 27 / 0.14);
 
   /* One accent for light sections. The four-colour set that was
      here read as a template: rainbow feature cards are decoration
      standing in for hierarchy. */
-  --color-accent-on-light: #1657b5;
+  --color-accent-on-light: #0e6b52;
 
   /* Story-column accents. Kept as a deliberate set rather than a
      palette grab: a monotonic hue ramp (teal 188 -> blue 215 ->
@@ -142,14 +142,14 @@
      This is a partial walk-back of the note above: colour here labels
      three parallel blocks, it does not stand in for hierarchy. Keep it
      to sets like this and it will not read as rainbow feature cards. */
-  --color-story-1: #0e6f7d;
-  --color-story-2: #1657b5;
-  --color-story-3: #5a46c8;
+  --color-story-1: #0e6b52;
+  --color-story-2: #0a5943;
+  --color-story-3: #1c372d;
   /* Neutral media slot. Plain grey on purpose — it reads as "image
      goes here" rather than as invented artwork. */
-  --color-media-on-light: #e4e8ee;
+  --color-media-on-light: #e2ded2;
 
-  --color-surface: #141b29;
+  --color-surface: #1c372d;
   --color-danger: #ff8f8f;
   /* The dark-surface danger is a pale pink that all but disappears on
      white. Form errors on a light panel take this instead: 6.48:1 on
