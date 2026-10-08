@@ -265,13 +265,12 @@ export function Jobs() {
               name="summary"
               rows={2}
               defaultValue={current?.summary}
-              maxLength={240}
               required
               aria-describedby="job-summary-hint"
             />
             <span className={styles.hint} id="job-summary-hint">
-              Shown on the careers list and beside the application form.
-              Keep it short; the full advert goes below.
+              Shown on the careers list and beside the application form,
+              where only the first couple of lines are displayed.
             </span>
           </label>
 
@@ -282,7 +281,6 @@ export function Jobs() {
               name="description"
               rows={16}
               defaultValue={current?.description}
-              maxLength={20000}
               aria-describedby="job-description-hint"
             />
             <span className={styles.hint} id="job-description-hint">
