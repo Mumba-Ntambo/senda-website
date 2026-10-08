@@ -310,6 +310,7 @@ export const en: Content = {
     factArea: "Team",
     factCompensation: "Compensation",
     factCloses: "Closing date",
+    factAbout: "About the role",
   },
 
   /* None of these pages exist yet, so nothing is listed. */

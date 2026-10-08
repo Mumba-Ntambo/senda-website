@@ -245,6 +245,7 @@ export type Content = {
     factArea: string;
     factCompensation: string;
     factCloses: string;
+    factAbout: string;
   };
   /* Labels for the form controls and other chrome that is not part of
      any section's copy. */

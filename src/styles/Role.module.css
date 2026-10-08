@@ -102,6 +102,16 @@
   overflow-wrap: anywhere;
 }
 
+/* Running text, so it is set smaller and quieter than the one-line
+   facts above it. */
+.factNote {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-fg-muted);
+  overflow-wrap: anywhere;
+}
+
 /* --- Tabs --------------------------------------------------------- */
 
 .content {
@@ -367,6 +377,12 @@ textarea.input {
 
   .fact:last-child {
     border-block-end: 1px solid var(--color-border);
+  }
+
+  /* The summary needs the full width; half a column would set it in
+     lines of three words. */
+  .about {
+    grid-column: 1 / -1;
   }
 }
 

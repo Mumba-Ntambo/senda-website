@@ -77,6 +77,14 @@ export async function Role({ opening }: { opening: Opening }) {
                 <dd className={styles.factValue}>{fact.value}</dd>
               </div>
             ))}
+
+            {/* The role in a few lines, beside the form: someone
+                filling in the Application tab should not have to
+                switch back to remember what they are applying for. */}
+            <div className={`${styles.fact} ${styles.about}`}>
+              <dt className={styles.factLabel}>{apply.factAbout}</dt>
+              <dd className={styles.factNote}>{opening.summary}</dd>
+            </div>
           </dl>
 
           <RoleTabs
