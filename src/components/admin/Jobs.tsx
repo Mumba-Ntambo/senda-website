@@ -263,11 +263,16 @@ export function Jobs() {
             <textarea
               className={styles.input}
               name="summary"
-              rows={4}
+              rows={2}
               defaultValue={current?.summary}
-              maxLength={1000}
+              maxLength={240}
               required
+              aria-describedby="job-summary-hint"
             />
+            <span className={styles.hint} id="job-summary-hint">
+              Shown on the careers list and beside the application form.
+              Keep it short; the full advert goes below.
+            </span>
           </label>
 
           <label className={styles.field}>
@@ -275,14 +280,17 @@ export function Jobs() {
             <textarea
               className={styles.input}
               name="description"
-              rows={10}
+              rows={16}
               defaultValue={current?.description}
               maxLength={20000}
               aria-describedby="job-description-hint"
             />
             <span className={styles.hint} id="job-description-hint">
-              Shown on the role&apos;s own page, above the application form.
-              Leave a blank line between paragraphs.
+              The advert itself, shown under Overview on the role&apos;s page.
+              Leave a blank line between paragraphs. Start a line with
+              &quot;## &quot; for a heading, &quot;- &quot; for a bullet,
+              &quot;1. &quot; for a numbered step, and wrap words in
+              **two stars** for bold.
             </span>
           </label>
 
@@ -333,7 +341,9 @@ export function Jobs() {
                   </span>
                 </div>
 
-                <p className={styles.message}>{job.summary}</p>
+                <p className={`${styles.message} ${styles.clamp}`}>
+                  {job.summary}
+                </p>
 
                 <div className={styles.actions}>
                   <button

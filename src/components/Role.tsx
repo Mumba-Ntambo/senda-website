@@ -4,6 +4,7 @@ import { ApplyForm } from "@/components/ApplyForm";
 import { RoleTabs } from "@/components/RoleTabs";
 import { content } from "@/shared/content";
 import { Logo } from "@/shared/Logo";
+import { RichText } from "@/shared/RichText";
 import type { Opening } from "@/shared/types";
 import styles from "@/styles/Role.module.css";
 
@@ -13,13 +14,6 @@ import styles from "@/styles/Role.module.css";
    two tabs beside them. */
 export async function Role({ opening }: { opening: Opening }) {
   const { site, apply } = await content();
-
-  /* A blank line in the advert starts a new paragraph; single line
-     breaks are kept within one, so a typed list still reads as one. */
-  const paragraphs = (opening.description ?? "")
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
 
   const facts = [
     { label: apply.factLocation, value: opening.location },
@@ -91,11 +85,9 @@ export async function Role({ opening }: { opening: Opening }) {
             overview={
               <>
                 <p className={styles.summary}>{opening.summary}</p>
-                {paragraphs.map((paragraph) => (
-                  <p className={styles.body} key={paragraph}>
-                    {paragraph}
-                  </p>
-                ))}
+                {opening.description ? (
+                  <RichText source={opening.description} />
+                ) : null}
               </>
             }
             application={

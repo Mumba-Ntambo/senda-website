@@ -110,6 +110,13 @@
   line-height: var(--leading-body);
   color: var(--color-fg-muted);
   overflow-wrap: anywhere;
+  /* A summary is a line or two. If someone pastes more, the side
+     shows the start of it and the Overview tab has the rest. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  overflow: hidden;
 }
 
 /* --- Tabs --------------------------------------------------------- */
@@ -151,22 +158,10 @@
 
 .summary {
   max-width: var(--measure);
-  margin: 0;
+  margin: 0 0 var(--space-5);
   font-size: var(--text-xl);
   line-height: var(--leading-heading);
   font-weight: var(--weight-heading);
-}
-
-/* pre-line keeps the single line breaks someone typed — a list of
-   duties stays a list — while still wrapping long lines. */
-.body {
-  max-width: var(--measure);
-  margin: var(--space-4) 0 0;
-  font-size: var(--text-lead);
-  line-height: var(--leading-prose);
-  color: var(--color-fg-muted);
-  white-space: pre-line;
-  overflow-wrap: anywhere;
 }
 
 .applyNow {

@@ -155,7 +155,14 @@
   color: var(--color-brand);
 }
 
+/* Two lines at most: the list is for choosing a role, and the role's
+   own page is where the advert is read. */
 .roleSummary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
   max-width: var(--measure);
   margin: var(--space-2) 0 0;
   font-size: var(--text-md);
