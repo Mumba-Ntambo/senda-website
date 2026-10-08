@@ -224,7 +224,8 @@ export type Content = {
     missing: string;
     badEmail: string;
     badFile: string;
-    privacy: string;
+    consent: string;
+    consentMissing: string;
     backToRoles: string;
     overviewTab: string;
     applicationTab: string;

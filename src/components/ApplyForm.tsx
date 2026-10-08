@@ -15,7 +15,7 @@ const TYPES = [
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
-type Errors = Partial<Record<"name" | "email" | "cv", string>>;
+type Errors = Partial<Record<"name" | "email" | "cv" | "consent", string>>;
 
 /* The application for one role. The CV goes straight from the browser
    into private storage and the details into the applications table —
@@ -56,6 +56,7 @@ export function ApplyForm({
       !TYPES.includes(cv.type)
     )
       found.cv = apply.badFile;
+    if (form.get("consent") !== "on") found.consent = apply.consentMissing;
 
     setErrors(found);
     if (Object.keys(found).length > 0 || !(cv instanceof File)) return;
@@ -98,6 +99,7 @@ export function ApplyForm({
       link: text("link").slice(0, 300),
       note: text("note").slice(0, 5000),
       cv_path: path,
+      consented: true,
     });
 
     setState(error ? "failed" : "sent");
@@ -287,6 +289,30 @@ export function ApplyForm({
         />
       </div>
 
+      {/* Last, beside the button it gates: agreeing is the final thing
+          someone does before sending. */}
+      <div className={styles.row}>
+        <label className={styles.consent}>
+          <input
+            className={styles.checkbox}
+            type="checkbox"
+            name="consent"
+            required
+            aria-invalid={errors.consent ? true : undefined}
+            aria-describedby={errors.consent ? `${id}-consent-error` : undefined}
+          />
+          <span>
+            {apply.consent}
+            {star}
+          </span>
+        </label>
+        {errors.consent ? (
+          <p className={styles.error} id={`${id}-consent-error`}>
+            {errors.consent}
+          </p>
+        ) : null}
+      </div>
+
       <button
         className={styles.submit}
         type="submit"
@@ -298,8 +324,6 @@ export function ApplyForm({
       <p className={styles.status} role="status" aria-live="polite">
         {state === "failed" ? apply.failed : ""}
       </p>
-
-      <p className={styles.hint}>{apply.privacy}</p>
     </form>
   );
 }

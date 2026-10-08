@@ -287,8 +287,9 @@ export const en: Content = {
     missing: "Please fill this in.",
     badEmail: "That does not look like an email address.",
     badFile: "Attach your CV as a PDF or Word file of 5 MB or less.",
-    privacy:
-      "We use what you send only to consider you for this role.",
+    consent:
+      "I agree that Senda Technologies may store and use the details and CV I am sending to consider me for this role, and may contact me about it.",
+    consentMissing: "Please tick this box to send your application.",
     backToRoles: "All open roles",
     overviewTab: "Overview",
     applicationTab: "Application",
