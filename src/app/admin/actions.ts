@@ -3,10 +3,10 @@
 import nodemailer from "nodemailer";
 
 import { brand } from "@/content/shared";
-import { rejectionMessage } from "@/shared/rejection";
+import { SENT_COLUMN, applicantMessage, isMailKind } from "@/shared/applicantMail";
 import { adminSupabase, supabaseConfigured } from "@/shared/supabase";
 
-export type RejectionResult =
+export type MailResult =
   | { ok: true; sentAt: string }
   | { ok: false; message: string };
 
@@ -16,7 +16,8 @@ export type RejectionResult =
 const mailUser = process.env.GMAIL_USER;
 const mailPassword = process.env.GMAIL_APP_PASSWORD;
 
-/* Emails the standard rejection to one applicant.
+/* Emails one applicant the standard message for the stage their
+   application is at: under review, shortlisted or rejected.
 
    A server function can be called by anyone who can reach the site, so
    it trusts nothing it is handed. The caller's own session is used to
@@ -24,11 +25,16 @@ const mailPassword = process.env.GMAIL_APP_PASSWORD;
    an application; for anyone else the claim below matches no row and no
    email is sent. The address written to is the one on the record, never
    one supplied by the caller. */
-export async function sendRejection(
+export async function sendApplicantEmail(
   applicationId: string,
+  kind: string,
   accessToken: string,
-): Promise<RejectionResult> {
-  if (typeof applicationId !== "string" || typeof accessToken !== "string") {
+): Promise<MailResult> {
+  if (
+    typeof applicationId !== "string" ||
+    typeof accessToken !== "string" ||
+    !isMailKind(kind)
+  ) {
     return { ok: false, message: "That request was not understood." };
   }
 
@@ -42,15 +48,16 @@ export async function sendRejection(
 
   const supabase = adminSupabase(accessToken);
   const sentAt = new Date().toISOString();
+  const column = SENT_COLUMN[kind];
 
   /* Claimed before sending, not marked after: two clicks, or two
      admins, cannot both get past this line for the same application. */
   const { data, error } = await supabase
     .from("applications")
-    .update({ rejection_sent_at: sentAt })
+    .update({ [column]: sentAt })
     .eq("id", applicationId)
-    .eq("status", "rejected")
-    .is("rejection_sent_at", null)
+    .eq("status", kind)
+    .is(column, null)
     .select("name, email, role_title");
 
   if (error) return { ok: false, message: error.message };
@@ -60,11 +67,11 @@ export async function sendRejection(
     return {
       ok: false,
       message:
-        "No email was sent. The application is not marked rejected, has already been emailed, or you are not signed in as an admin.",
+        "No email was sent. The application is no longer at that stage, has already been sent this email, or you are not signed in as an admin.",
     };
   }
 
-  const { subject, body } = rejectionMessage(application);
+  const { subject, body } = applicantMessage(kind, application);
 
   try {
     await nodemailer
@@ -83,7 +90,7 @@ export async function sendRejection(
        again. */
     await supabase
       .from("applications")
-      .update({ rejection_sent_at: null })
+      .update({ [column]: null })
       .eq("id", applicationId);
 
     return {

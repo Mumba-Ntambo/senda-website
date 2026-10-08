@@ -2,8 +2,13 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { sendRejection } from "@/app/admin/actions";
-import { rejectionMessage } from "@/shared/rejection";
+import { sendApplicantEmail } from "@/app/admin/actions";
+import {
+  SENT_COLUMN,
+  applicantMessage,
+  isMailKind,
+} from "@/shared/applicantMail";
+import type { MailKind } from "@/shared/applicantMail";
 import { browserSupabase } from "@/shared/supabase";
 import styles from "@/styles/Admin.module.css";
 
@@ -21,7 +26,16 @@ type Application = {
   note: string;
   cv_path: string;
   status: Status;
+  reviewing_sent_at: string | null;
+  shortlisted_sent_at: string | null;
   rejection_sent_at: string | null;
+};
+
+/* What the dashboard calls each stage's email. */
+const MAIL_LABEL: Record<MailKind, { send: string; sent: string }> = {
+  reviewing: { send: "Send review email", sent: "Review email sent" },
+  shortlisted: { send: "Send shortlist email", sent: "Shortlist email sent" },
+  rejected: { send: "Send rejection email", sent: "Rejection emailed" },
 };
 
 const STATUSES: { key: Status; label: string }[] = [
@@ -44,11 +58,11 @@ const when = (iso: string) =>
    a stranger, and anything else stays as plain text. */
 const safeLink = (link: string) => /^https?:\/\//i.test(link);
 
-/* The same rejection as a Gmail draft, for the one that needs a
-   personal word before it goes. A mailto: link would open whatever mail
-   app the computer defaults to, which is rarely the admin's inbox. */
-const rejectionDraft = (row: Application) => {
-  const { subject, body } = rejectionMessage(row);
+/* The same email as a Gmail draft, for the one that needs a personal
+   word before it goes. A mailto: link would open whatever mail app the
+   computer defaults to, which is rarely the admin's inbox. */
+const mailDraft = (kind: MailKind, row: Application) => {
+  const { subject, body } = applicantMessage(kind, row);
   const draft = new URLSearchParams({
     view: "cm",
     fs: "1",
@@ -104,13 +118,14 @@ export function Applications() {
 
   /* The server sends it, as this admin: it is handed their session so
      that the database, not the server, decides whether they may. */
-  async function reject(row: Application) {
+  async function sendMail(kind: MailKind, row: Application) {
     setError("");
     setSending(row.id);
 
     const { data } = await browserSupabase().auth.getSession();
-    const result = await sendRejection(
+    const result = await sendApplicantEmail(
       row.id,
+      kind,
       data.session?.access_token ?? "",
     ).catch(() => ({ ok: false as const, message: "Could not reach the site." }));
 
@@ -119,7 +134,7 @@ export function Applications() {
     else
       setRows((current) =>
         (current ?? []).map((r) =>
-          r.id === row.id ? { ...r, rejection_sent_at: result.sentAt } : r,
+          r.id === row.id ? { ...r, [SENT_COLUMN[kind]]: result.sentAt } : r,
         ),
       );
   }
@@ -288,30 +303,11 @@ export function Applications() {
                   Open CV
                 </button>
 
-                {row.rejection_sent_at ? (
-                  <span className={styles.when}>
-                    Rejection emailed {when(row.rejection_sent_at)}
-                  </span>
-                ) : row.status === "rejected" ? (
-                  <>
-                    <button
-                      className={styles.ghost}
-                      type="button"
-                      disabled={sending === row.id}
-                      onClick={() => reject(row)}
-                    >
-                      {sending === row.id ? "Sending…" : "Send rejection email"}
-                    </button>
-                    <a
-                      className={styles.ghost}
-                      href={rejectionDraft(row)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Edit in Gmail
-                    </a>
-                  </>
-                ) : null}
+                <StageMail
+                  row={row}
+                  busy={sending === row.id}
+                  onSend={sendMail}
+                />
 
                 {confirming === row.id ? (
                   <span className={styles.confirm}>
@@ -346,5 +342,52 @@ export function Applications() {
         </ul>
       )}
     </section>
+  );
+}
+
+/* The email that goes with the stage an application is at: a button to
+   send it, or when it went. Moving an application to a stage sends
+   nothing by itself, so a slip on the status cannot email anyone. */
+function StageMail({
+  row,
+  busy,
+  onSend,
+}: {
+  row: Application;
+  busy: boolean;
+  onSend: (kind: MailKind, row: Application) => void;
+}) {
+  if (!isMailKind(row.status)) return null;
+
+  const kind = row.status;
+  const sentAt = row[SENT_COLUMN[kind]];
+
+  if (sentAt) {
+    return (
+      <span className={styles.when}>
+        {MAIL_LABEL[kind].sent} {when(sentAt)}
+      </span>
+    );
+  }
+
+  return (
+    <>
+      <button
+        className={styles.ghost}
+        type="button"
+        disabled={busy}
+        onClick={() => onSend(kind, row)}
+      >
+        {busy ? "Sending…" : MAIL_LABEL[kind].send}
+      </button>
+      <a
+        className={styles.ghost}
+        href={mailDraft(kind, row)}
+        target="_blank"
+        rel="noreferrer"
+      >
+        Edit in Gmail
+      </a>
+    </>
   );
 }
