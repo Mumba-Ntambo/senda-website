@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { brand } from "@/content/shared";
 import { browserSupabase } from "@/shared/supabase";
 import styles from "@/styles/Admin.module.css";
 
@@ -40,6 +41,22 @@ const when = (iso: string) =>
 /* Only http(s) links are made clickable: the field is free text from
    a stranger, and anything else stays as plain text. */
 const safeLink = (link: string) => /^https?:\/\//i.test(link);
+
+/* A rejection is written by hand, from the admin's own mail app: this
+   only opens it with the standard wording filled in, ready to edit. */
+const rejectionMail = (row: Application) => {
+  const subject = `Your application for ${row.role_title} at ${brand.name}`;
+  const body = [
+    `Dear ${row.name},`,
+    `Thank you for applying for the ${row.role_title} role at ${brand.name}, and for the time you put into your application.`,
+    "We have reviewed it carefully and, on this occasion, we will not be taking it further.",
+    "We will keep your application on file, and we will be in touch if a role that suits your experience opens up.",
+    "We wish you the very best in your search.",
+    `Kind regards,\n${brand.name}`,
+  ].join("\n\n");
+
+  return `mailto:${row.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+};
 
 /* Everyone who has applied through a role's page, newest first. */
 export function Applications() {
@@ -245,6 +262,12 @@ export function Applications() {
                 >
                   Open CV
                 </button>
+
+                {row.status === "rejected" ? (
+                  <a className={styles.ghost} href={rejectionMail(row)}>
+                    Email rejection
+                  </a>
+                ) : null}
 
                 {confirming === row.id ? (
                   <span className={styles.confirm}>

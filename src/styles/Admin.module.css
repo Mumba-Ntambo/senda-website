@@ -191,6 +191,7 @@
   font-size: var(--text-sm);
   font-weight: var(--btn-font-weight);
   line-height: var(--leading-flat);
+  text-decoration: none;
   border: 1px solid transparent;
   border-radius: var(--radius-btn);
   cursor: pointer;
