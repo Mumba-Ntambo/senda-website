@@ -204,12 +204,34 @@
   /* Hidden, not display:none, so it can transition — and unlike
      opacity alone this also takes the links out of the tab order and
      the accessibility tree while the panel is closed. The 200ms delay
-     holds visibility until the fade-out has finished. */
+     holds visibility until the fade-out has finished.
+
+     The delay is written out rather than taken from --transition-base:
+     that token is "200ms ease", and a second easing after "linear"
+     made the whole declaration invalid, so the panel had no transition
+     at all and shut the instant the pointer left the label. */
   visibility: hidden;
   transition:
     opacity var(--transition-base),
     translate var(--transition-base),
-    visibility 0s linear var(--transition-base);
+    visibility 0s linear 200ms;
+}
+
+/* The label is shorter than the bar, which leaves a strip of bar
+   between it and the panel that belongs to neither. This carries the
+   label's hover across that strip, so the pointer never leaves the
+   item on its way down. It overlaps the panel's top edge by a little;
+   the panel comes later and paints over it. */
+.hasMenu > .navLink {
+  position: relative;
+}
+
+.hasMenu > .navLink::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  height: var(--space-3);
 }
 
 .hasMenu:hover .menu,
